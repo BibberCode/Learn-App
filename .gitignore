@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+
+# Virtual Environment
+venv/
+.env/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor (VS Code etc.)
+.vscode/
+.idea/
+
+# Env / Secrets
+.env
+.env.*
+
+# Node (falls du später JS Tools nutzt)
+node_modules/
+
+# Build / Dist
+dist/
+build/
