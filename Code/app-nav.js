@@ -5,6 +5,11 @@ class AppNav extends HTMLElement {
   }
 
   connectedCallback() {
+    this.render();
+    this.init();
+  }
+
+  render() {
     this.shadowRoot.innerHTML = `
       <style>
         .nav {
@@ -64,6 +69,7 @@ class AppNav extends HTMLElement {
           top: 6px;
           left: 0;
           height: calc(100% - 12px);
+
           background: rgba(31,111,74,0.12);
           border-radius: 999px;
 
@@ -73,19 +79,23 @@ class AppNav extends HTMLElement {
 
           z-index: 1;
         }
+
+        button:active {
+          transform: scale(0.92);
+          transition: transform 0.1s ease;
+        }
       </style>
 
       <div class="nav">
         <div class="bubble"></div>
 
-        <button data-page="home"><span>🏠</span>Home</button>
-        <button data-page="cards"><span>📚</span>Karten</button>
-        <button data-page="stats"><span>📊</span>Statistik</button>
-        <button data-page="profile"><span>👤</span>Profil</button>
+        <button data-page="/index"><span>🏠</span>Home</button>
+        <button data-page="/cards"><span>📚</span>Karten</button>
+        <button data-page="/code/learn/learn"><span>🎓</span>Lernen</button>
+        <button data-page="/stats"><span>📊</span>Statistik</button>
+        <button data-page="/profile"><span>👤</span>Profil</button>
       </div>
     `;
-
-    this.init();
   }
 
   init() {
@@ -112,7 +122,6 @@ class AppNav extends HTMLElement {
       btn.addEventListener("click", () => {
         setActive(btn);
 
-        // Seitenwechsel
         if (btn.dataset.page) {
           window.location.href = btn.dataset.page + ".html";
         }
@@ -123,15 +132,26 @@ class AppNav extends HTMLElement {
     const path = window.location.pathname;
 
     let activeBtn = buttons[0];
+
     buttons.forEach(btn => {
       if (path.includes(btn.dataset.page)) {
         activeBtn = btn;
       }
     });
 
-    setTimeout(() => {
+    
+
+    const initBubble = () => {
       setActive(activeBtn);
-    }, 50);
+    };
+
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(() =>
+        requestAnimationFrame(initBubble)
+      );
+    } else {
+      requestAnimationFrame(initBubble);
+    }
 
     window.addEventListener("resize", () => {
       const active = this.shadowRoot.querySelector(".active");
