@@ -1,78 +1,51 @@
-console.log("profile.js geladen");
-
-//Name
 function saveName() {
-  const name = document.getElementById("nameInput").value;
+  const input = document.getElementById("nameInput");
+  const name = input?.value || "";
 
-  document.getElementById("name").textContent = name;
+  const nameEl = document.getElementById("name");
+  if (nameEl) nameEl.textContent = name;
 
   localStorage.setItem("name", name);
 }
 
-window.onload = function () {
-  const saved = localStorage.getItem("name");
-
-  if (saved) {
-    document.getElementById("name").textContent = saved;
-    document.getElementById("nameInput").value = saved;
-  }
-};
-
-//Avatar
-const input = document.getElementById("fileInput");
-const img = document.getElementById("avatarImg");
-
-// Default Avatar (Fallback)
-const DEFAULT_AVATAR = "";
-
-// IndexedDB helper (leicht gehalten mit localStorage + Base64)
-function saveAvatar(dataUrl) {
-  localStorage.setItem("avatar", dataUrl);
-}
-
-function loadAvatar() {
-  return localStorage.getItem("avatar");
-}
-
-// Beim Start laden
 window.addEventListener("DOMContentLoaded", () => {
+
+  // NAME
+  const savedName = localStorage.getItem("name");
+
+  const nameEl = document.getElementById("name");
+  const nameInput = document.getElementById("nameInput");
+
+  if (savedName) {
+    if (nameEl) nameEl.textContent = savedName;
+    if (nameInput) nameInput.value = savedName;
+  }
+
+  // AVATAR
   const input = document.getElementById("fileInput");
   const img = document.getElementById("avatarImg");
 
-  const saved = localStorage.getItem("avatar");
-
-  if (saved) {
-    img.src = saved;
+  const savedAvatar = localStorage.getItem("avatar");
+  if (savedAvatar && img) {
+    img.src = savedAvatar;
   }
 
-  input.addEventListener("change", (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  if (input) {
+    input.addEventListener("change", (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
 
-    const reader = new FileReader();
+      const reader = new FileReader();
 
-    reader.onload = () => {
-      img.src = reader.result;
-      localStorage.setItem("avatar", reader.result);
-    };
+      reader.onload = () => {
+        const dataUrl = reader.result;
 
-    reader.readAsDataURL(file);
-  });
-});
+        if (img) img.src = dataUrl;
+        localStorage.setItem("avatar", dataUrl);
+      };
 
-// Datei auswählen
-input.addEventListener("change", (e) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
+      reader.readAsDataURL(file);
+    });
+  }
 
-  const reader = new FileReader();
-
-  reader.onload = () => {
-    const dataUrl = reader.result;
-
-    img.src = dataUrl;
-    saveAvatar(dataUrl);
-  };
-
-  reader.readAsDataURL(file);
 });

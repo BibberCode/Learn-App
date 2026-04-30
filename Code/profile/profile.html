@@ -23,7 +23,7 @@
   <div class="card profile-card">
 
     <button class="avatar" onclick="document.getElementById('fileInput').click()">
-    <img id="avatarImg" alt="avatar">
+    <img id="avatarImg" alt="Profilbild" src="/Code/home/frontend/avatar-placeholder.png">
     </button>
     <input type="file" id="fileInput" accept="image/*" hidden>
 
@@ -64,7 +64,7 @@
       </div>
 
       <div class="small-card">
-        <h4>3h</h4>
+        <h4 id="totalTime">0 min</h4>
         <p>Gesamtzeit</p>
       </div>
     </div>
@@ -80,7 +80,7 @@
 <app-nav></app-nav>
 
 <script src="/Code/profile/profile-script.js"></script>
-<script src="/Code/home/frontend/script.js"></script>
+<script src="/Code/home/frontend/times.js"></script>
 
 </body>
 </html>

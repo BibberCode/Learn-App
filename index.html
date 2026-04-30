@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Home</title>
+<title>Zuhause - Lern doch noch etwas</title>
 
 <link rel="stylesheet" href="/Code/home/frontend/style.css">
 
@@ -17,7 +17,7 @@
   <div class="header">
     <div>☰</div>
     <div class="logo">📖 Confident Learnin</div>
-    <div class="streak">🔥 5 Tage</div>
+    <div class="streak">🔥 <span id="streak"></span></div>
   </div>
 
   <!-- GREETING -->
@@ -29,7 +29,7 @@
       <div class="progress" id="bar"></div>
     </div>
 
-    <p><strong><span id="timer"></span> / <span id="maxMinutes"></span></strong></p>
+    <p><strong><span id="timer"></span> / 60 min</strong></p>
   </div>
 
   <!-- LERNSETS -->
@@ -85,7 +85,7 @@
     <div class="small-card">3️⃣<br>Selbsteinschätzung</div>
   </div>
 
-  <div class="button">
+  <div class="button" style="margin-top: 10px;">
     + Neues Lernset erstellen
   </div>
   </div>
@@ -97,8 +97,9 @@
 <script src="/Code/app-nav.js" defer></script>
 <app-nav></app-nav>
 
-<script src="/Code/home/frontend/script.js"></script>
-<script src="/Code/profile/profile.js"></script>
+<script src="/Code/home/frontend/times.js" defer></script>
+<script src="/Code/profile/profile-script.js" defer></script>
+<script src="/Code/home/frontend/streak.js" defer></script>
 
 </body>
 </html>
