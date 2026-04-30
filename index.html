@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Confident Learnin</title>
+<title>Home</title>
 
-<link rel="stylesheet" href="./Code/home/frontend/style.css">
+<link rel="stylesheet" href="/Code/home/frontend/style.css">
 
 </head>
 
@@ -22,14 +22,14 @@
 
   <!-- GREETING -->
   <div class="card">
-    <h2>Hallo! 👋</h2>
+    <h2>Hallo <span id="name">Lernender</span>! 👋</h2>
     <p>Bereit, heute etwas zu lernen?</p>
 
     <div class="progress-bar">
-      <div class="progress"></div>
+      <div class="progress" id="bar"></div>
     </div>
 
-    <p><strong>30 / 60 Min.</strong></p>
+    <p><strong><span id="timer"></span> / <span id="maxMinutes"></span></strong></p>
   </div>
 
   <!-- LERNSETS -->
@@ -69,6 +69,7 @@
   <h3 style="margin-top: 25px;">Weiterlernen</h3>
 
   <div class="card">
+    📘
     <h4>Mathe Formeln</h4>
     <p>12 Karten fällig</p>
     <div class="button" style="margin-top: 10px;">Lernen starten</div>
@@ -77,22 +78,27 @@
   <!-- HOW IT WORKS -->
   <h3 style="margin-top: 25px;">So funktioniert es</h3>
 
-  <div class="grid">
+  <div class="card">
+    <div class="grid">
     <div class="small-card">1️⃣<br>Karte ansehen</div>
-    <div class="small-card">2️⃣<br>Selbsteinschätzung</div>
-    <div class="small-card">3️⃣<br>Wiederholung</div>
+    <div class="small-card">2️⃣<br>Antwort geben</div>
+    <div class="small-card">3️⃣<br>Selbsteinschätzung</div>
   </div>
 
-  <div class="button" style="margin-top: 20px;">
+  <div class="button">
     + Neues Lernset erstellen
   </div>
+  </div>
+
+  <div style="height: 80px;"></div>
 
 </div>
 
-<script src="./Code/app-nav.js" defer></script>
+<script src="/Code/app-nav.js" defer></script>
 <app-nav></app-nav>
 
-<script src="./Code/home/frontend/script.js"></script>
+<script src="/Code/home/frontend/script.js"></script>
+<script src="/Code/profile/profile.js"></script>
 
 </body>
 </html>
