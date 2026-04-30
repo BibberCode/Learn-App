@@ -8,6 +8,16 @@ function saveName() {
   localStorage.setItem("name", name);
 }
 
+function setMaxMinutes() {
+  const input = document.getElementById("maxMinutesInput");
+  const maxMinutes = Number(input?.value) || 60;
+
+  const maxMinutesEl = document.getElementById("maxMinutes");
+  if (maxMinutesEl) maxMinutesEl.textContent = maxMinutes;
+
+  localStorage.setItem("maxMinutes", maxMinutes);
+}
+
 window.addEventListener("DOMContentLoaded", () => {
 
   // NAME
@@ -19,6 +29,17 @@ window.addEventListener("DOMContentLoaded", () => {
   if (savedName) {
     if (nameEl) nameEl.textContent = savedName;
     if (nameInput) nameInput.value = savedName;
+  }
+
+  // MAX MINUTES
+  const savedMaxMinutes = localStorage.getItem("maxMinutes") || "60";
+
+  const maxMinutesEl = document.getElementById("maxMinutes");
+  const maxMinutesInput = document.getElementById("maxMinutesInput");
+
+  if (savedMaxMinutes) {
+    if (maxMinutesEl) maxMinutesEl.textContent = savedMaxMinutes;
+    if (maxMinutesInput) maxMinutesInput.value = savedMaxMinutes;
   }
 
   // AVATAR
