@@ -4,7 +4,7 @@ const urlsToCache = [
   "/",
   "/index.html",
   "/code/home/frontend/style.css",
-  "/code/home/frontend/app.js",
+  "/app.js",
   "/icon-192.png"
 ];
 
