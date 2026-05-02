@@ -37,7 +37,7 @@ if (
   localStorage.setItem("learnsets", JSON.stringify(learnsets));
   localStorage.setItem("currentSetName", title);
 
-  window.location.href = "/Code/cards/editor.html";
+  window.location.href = "Code/cards/editor.html";
 }
 
 function renderLearnsets() {
@@ -70,7 +70,7 @@ function renderLearnsets() {
 
     card.onclick = () => {
       localStorage.setItem("currentSetName", set.name);
-      window.location.href = "/Code/cards/editor.html";
+      window.location.href = "Code/cards/editor.html";
     };
 
     container.appendChild(card);

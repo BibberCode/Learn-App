@@ -119,7 +119,7 @@ function saveAll() {
 
   localStorage.setItem("learnsets", JSON.stringify(learnsets));
 
-  window.location.href = "/Code/cards/cards.html";
+  window.location.href = "Code/cards/cards.html";
 }
 
 function saveName() {
@@ -198,5 +198,5 @@ function deleteSet() {
   localStorage.setItem("learnsets", JSON.stringify(newList));
   localStorage.removeItem("currentSetName");
 
-  window.location.href = "/Code/cards/cards.html";
+  window.location.href = "Code/cards/cards.html";
 }

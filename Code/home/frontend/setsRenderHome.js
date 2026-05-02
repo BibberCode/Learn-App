@@ -28,7 +28,7 @@ function renderLearnsets() {
 
     card.onclick = () => {
       localStorage.setItem("currentSetName", set.name);
-      window.location.href = "/Code/cards/editor.html";
+      window.location.href = "Code/cards/editor.html";
     };
 
     container.appendChild(card);
