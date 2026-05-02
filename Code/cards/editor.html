@@ -9,7 +9,7 @@
 
 <body>
 
-<div class="container">
+<div id="container" class="container">
 
   <!-- HEADER -->
   <div class="header">
@@ -17,62 +17,56 @@
   </div>
 
   <!-- CARD: Lernset Name -->
+  
   <div class="card profile-card">
-    <h3>Neues Lernset</h3>
+    <button onclick="deleteSet()" style="background: transparent; border: none;">🗑️ Lernset löschen</button>
+    <h3 id="currentSetName"></h3>
+    <div class="small-text" id="description"></div>
+
+    <div style="margin-top: 30px; margin-bottom: 5px;">Name des Lernsets:</div>
     <input id="setName" placeholder="Name des Lernsets">
+
+    <div style="margin-top: 30px; margin-bottom: 5px;">Beschreibung des Lernsets:</div>
+    <input id="setDescription" placeholder="Beschreibung des Lernsets">
   </div>
 
-  <!-- CARD: Frage -->
+
+<div id="cardContainer">
   <div class="card">
+    <button onclick="deleteCard(this)" style="background: transparent; border: none;">🗑️ Karte löschen</button>
+    <h2 style="margin-top: 10px;">Karte</h2>
+    
     <h4>Frage</h4>
-    <input id="frage" placeholder="Frage eingeben">
-  </div>
+    <input class="frage" placeholder="Frage eingeben">
 
-  <!-- CARD: Antwort -->
-  <div class="card">
-    <h4>Antwort</h4>
-    <input id="antwort" placeholder="Antwort eingeben">
+    <h4 style="margin-top: 50px;">Antwort</h4>
+    <input class="antwort" placeholder="Antwort eingeben">
   </div>
+</div>
 
-  <!-- BUTTON -->
-  <div class="button" onclick="saveSet()">
-    + Speichern
-  </div>
+  <button class="button" onclick="addCard()" style="margin-top: 10px;">
+    + Karte hinzufügen
+    </button>
 
   <!-- PREVIEW -->
-  <div class="card">
+  <div class="card" style="margin-top: 50px;">
     <h4>Vorschau</h4>
     <p class="small-text">Hier wird dein Lernset später angezeigt</p>
   </div>
 
+  <!-- BUTTON -->
+  <button class="button" style="margin-top: 30px;" onclick="saveAll(); saveName(); saveDescription()">
+    + Speichern
+  </button>
+
+    <div style="height: 80px;"></div>
+
 </div>
 
-<script>
-function saveSet() {
-  const name = document.getElementById("setName").value;
-  const frage = document.getElementById("frage").value;
-  const antwort = document.getElementById("antwort").value;
+<script src="/Code/app-nav.js" defer></script>
+<app-nav></app-nav>
 
-  let data = JSON.parse(localStorage.getItem("learnsets")) || [];
-
-  let set = data.find(s => s.name === name);
-
-  if (!set) {
-    set = { name: name, fragen: [] };
-    data.push(set);
-  }
-
-  set.fragen.push({
-    frage: frage,
-    antwort: antwort,
-    sicherheit: 0.5
-  });
-
-  localStorage.setItem("learnsets", JSON.stringify(data));
-
-  alert("Gespeichert");
-}
-</script>
+<script src="/Code/cards/editor.js" defer></script>
 
 </body>
 </html>
