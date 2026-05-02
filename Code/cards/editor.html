@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lernset Editor</title>
+  <link rel="stylesheet" href="/Code/home/frontend/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">Editor</div>
+  </div>
+
+  <!-- CARD: Lernset Name -->
+  <div class="card profile-card">
+    <h3>Neues Lernset</h3>
+    <input id="setName" placeholder="Name des Lernsets">
+  </div>
+
+  <!-- CARD: Frage -->
+  <div class="card">
+    <h4>Frage</h4>
+    <input id="frage" placeholder="Frage eingeben">
+  </div>
+
+  <!-- CARD: Antwort -->
+  <div class="card">
+    <h4>Antwort</h4>
+    <input id="antwort" placeholder="Antwort eingeben">
+  </div>
+
+  <!-- BUTTON -->
+  <div class="button" onclick="saveSet()">
+    + Speichern
+  </div>
+
+  <!-- PREVIEW -->
+  <div class="card">
+    <h4>Vorschau</h4>
+    <p class="small-text">Hier wird dein Lernset später angezeigt</p>
+  </div>
+
+</div>
+
+<script>
+function saveSet() {
+  const name = document.getElementById("setName").value;
+  const frage = document.getElementById("frage").value;
+  const antwort = document.getElementById("antwort").value;
+
+  let data = JSON.parse(localStorage.getItem("learnsets")) || [];
+
+  let set = data.find(s => s.name === name);
+
+  if (!set) {
+    set = { name: name, fragen: [] };
+    data.push(set);
+  }
+
+  set.fragen.push({
+    frage: frage,
+    antwort: antwort,
+    sicherheit: 0.5
+  });
+
+  localStorage.setItem("learnsets", JSON.stringify(data));
+
+  alert("Gespeichert");
+}
+</script>
+
+</body>
+</html>

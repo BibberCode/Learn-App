@@ -54,4 +54,4 @@ setInterval(() => {
     if (!document.hidden) {
         update();
     }
-}, 1000);
+}, 200);

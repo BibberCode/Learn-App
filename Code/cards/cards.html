@@ -16,19 +16,19 @@
   <!-- HEADER -->
   <div class="header">
     <div class="logo">LernSets</div>
-    <div class="streak">🔥 5 Tage</div>
+    <div class="streak">🔥 <span id="streak"></span> Streak</div>
   </div>
 
   <!-- NEUES LERNSET -->
   <div class="card">
     <h3>Neues Lernset erstellen</h3>
 
-    <input type="text" placeholder="Titel eingeben">
-    <input type="text" placeholder="Beschreibung (optional)">
+    <input id="title" type="text" placeholder="Titel eingeben">
+    <input id="description" type="text" placeholder="Beschreibung (optional)">
 
-    <div style="margin-top: 12px;" class="button">
+    <button style="margin-top: 12px;" class="button" onclick="addLearnset()">
       Erstellen
-    </div>
+    </button>
   </div>
 
   <!-- LERNSETS ÜBERSICHT -->
@@ -92,6 +92,8 @@
 <app-nav></app-nav>
 
 <script src="/Code/home/frontend/script.js"></script>
+<script src="/Code/home/frontend/streak.js" defer></script>
+<script src="/Code/cards/learnsets.js" defer></script>
 
 </body>
 </html>

@@ -18,9 +18,8 @@ function updateStreak() {
             localStorage.setItem("dateStreak", today);
         }
     }
-
-    const el = document.getElementById("streak");
-    if (el) el.textContent = streak + " Tage";
+    
+    document.getElementById("streak").textContent = streak + " Tage";
 }
 
 updateStreak();

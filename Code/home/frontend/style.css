@@ -111,9 +111,17 @@ body {
   color: white;
   padding: 12px 16px;
   border-radius: 12px;
-  text-align: center;
+
+  display: flex;
+  justify-content: center; /* horizontal mittig */
+  align-items: center;     /* vertikal mittig */
+
+  width: 100%;             /* volle Breite */
+  box-sizing: border-box;  /* Padding bleibt innerhalb der Breite */
+
   font-weight: 500;
   cursor: pointer;
+  text-align: center;
 }
 
 .profile-card {
