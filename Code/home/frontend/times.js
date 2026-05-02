@@ -1,39 +1,22 @@
+let running = false;
+let lastUpdate = Date.now();
+
 function update() {
-    const today = new Date().toISOString().split("T")[0];
-
-    let savedDate = localStorage.getItem("date");
-    let startTime = localStorage.getItem("startTime");
-
-    // Tageswechsel
-    if (!startTime || savedDate !== today) {
-        startTime = Date.now();
-        localStorage.setItem("startTime", startTime);
-        localStorage.setItem("date", today);
-
-        localStorage.setItem("dailyMinutes", 0); // reset für neuen Tag
-    } else {
-        startTime = Number(startTime);
-    }
+    if (!running) return;
 
     const now = Date.now();
-    const diff = now - startTime;
-    const minutes = diff / 1000 / 60;
+    const delta = (now - lastUpdate) / 1000 / 60;
+    lastUpdate = now;
 
-    // gespeicherte Werte holen
+    // gespeicherte Werte
     let daily = Number(localStorage.getItem("dailyMinutes") || 0);
     let total = Number(localStorage.getItem("totalMinutes") || 0);
-
-    // nur die DIFFERENZ addieren (wichtig!)
-    let lastUpdate = Number(localStorage.getItem("lastUpdate") || now);
-    const delta = (now - lastUpdate) / 1000 / 60;
 
     daily += delta;
     total += delta;
 
-    // speichern
     localStorage.setItem("dailyMinutes", daily);
     localStorage.setItem("totalMinutes", total);
-    localStorage.setItem("lastUpdate", now);
 
     // Anzeige
     const maxMinutes = Number(localStorage.getItem("maxMinutes")) || 60;
@@ -46,12 +29,40 @@ function update() {
     if (bar) bar.style.width = percent + "%";
     if (timer) timer.textContent = Math.floor(daily) + " min";
     if (totalTime) totalTime.textContent = Math.floor(total) + " min";
-
-    requestAnimationFrame(update);
 }
 
-setInterval(() => {
-    if (!document.hidden) {
-        update();
+// startet nur wenn aktiv
+function start() {
+    if (running) return;
+    running = true;
+    lastUpdate = Date.now();
+    loop();
+}
+
+// stoppt sofort
+function stop() {
+    running = false;
+}
+
+// Loop nur wenn aktiv
+function loop() {
+    if (!running) return;
+    update();
+    requestAnimationFrame(loop);
+}
+
+// Tab sichtbar / unsichtbar
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        stop();
+    } else {
+        start();
     }
-}, 200);
+});
+
+// zusätzlich Fokus/Blur (wichtig für Mobile/Windows)
+window.addEventListener("blur", stop);
+window.addEventListener("focus", start);
+
+// Start beim Laden
+start();

@@ -19,7 +19,7 @@ function updateStreak() {
         }
     }
     
-    document.getElementById("streak").textContent = streak + " Tage";
+    document.getElementById("streak").textContent = streak + " Tag(e)";
 }
 
 updateStreak();

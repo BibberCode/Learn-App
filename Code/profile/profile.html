@@ -5,25 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Profil</title>
 
-<link rel="stylesheet" href="/Learn-App/Code/home/frontend/style.css">
+<link rel="stylesheet" href="../home/frontend/style.css">
 
 </head>
 
 <body>
 
-    <div class="container">
+<div class="container">
 
   <!-- HEADER -->
   <div class="header">
     <div class="logo">Profil</div>
-    <div class="streak">🔥 <span id="streak">0</span> Streak</div>
   </div>
 
   <!-- PROFIL CARD -->
   <div class="card profile-card">
 
     <button class="avatar" onclick="document.getElementById('fileInput').click()">
-    <img id="avatarImg" alt="Profilbild" src="/Learn-App/Code/home/frontend/avatar-placeholder.png">
+      <img id="avatarImg" alt="Profilbild" src="../home/frontend/avatar-placeholder.png">
     </button>
     <input type="file" id="fileInput" accept="image/*" hidden>
 
@@ -39,7 +38,6 @@
     <input id="nameInput" placeholder="Name ändern">
     <div class="button" onclick="saveName()" style="margin-top: 10px;">Name ändern</div>
 
-
     <input id="maxMinutesInput" placeholder="Lernzeit festlegen" style="margin-top: 30px;">
     <div class="button" onclick="setMaxMinutes()" style="margin-top: 10px;">Lernzeit festlegen</div>
   </div>
@@ -51,12 +49,12 @@
 
     <div class="grid">
       <div class="small-card">
-        <h4>🔥 5</h4>
-        <p>Tage Streak</p>
+        <h4>🔥 <span id="streak">0</span></h4>
+        <p>Streak</p>
       </div>
 
       <div class="small-card">
-        <h4>12</h4>
+        <h4 id="numberOfSets">0</h4>
         <p>Lernsets</p>
       </div>
 
@@ -72,18 +70,18 @@
     </div>
   </div>
 
-    <div style="height: 80px;"></div>
+  <div style="height: 80px;"></div>
 
 </div>
 
-
-
-<script src="/Learn-App/Code/app-nav.js" defer></script>
+<!-- NAV -->
+<script src="../app-nav.js" defer></script>
 <app-nav></app-nav>
 
-<script src="/Learn-App/Code/profile/profile-script.js"></script>
-<script src="/Learn-App/Code/home/frontend/times.js"></script>
-<script src="/Learn-App/Code/home/frontend/streak.js" defer></script>
+<!-- SCRIPTS -->
+<script src="../profile/profile-script.js"></script>
+<script src="../home/frontend/times.js"></script>
+<script src="../home/frontend/streak.js" defer></script>
 
 </body>
 </html>

@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Karten</title>
 
-<link rel="stylesheet" href="/Learn-App/Code/home/frontend/style.css">
+<link rel="stylesheet" href="../home/frontend/style.css">
 
 </head>
 
 <body>
 
-   <div class="container">
+<div class="container">
 
   <!-- HEADER -->
   <div class="header">
@@ -34,7 +34,6 @@
   <!-- LERNSETS ÜBERSICHT -->
   <div class="card">
     <h3>Deine Lernsets bearbeiten</h3>
-
     <div class="grid" id="learnsetList"></div>
   </div>
 
@@ -42,13 +41,14 @@
 
 </div>
 
-
-<script src="/Learn-App/Code/app-nav.js" defer></script>
+<!-- NAV -->
+<script src="../app-nav.js" defer></script>
 <app-nav></app-nav>
 
-<script src="/Learn-App/Code/home/frontend/times.js"></script>
-<script src="/Learn-App/Code/home/frontend/streak.js" defer></script>
-<script src="/Learn-App/Code/cards/learnsets.js" defer></script>
+<!-- SCRIPTS -->
+<script src="../home/frontend/times.js"></script>
+<script src="../home/frontend/streak.js" defer></script>
+<script src="./learnsets.js" defer></script>
 
 </body>
 </html>

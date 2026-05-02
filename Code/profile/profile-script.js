@@ -69,3 +69,9 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+
+const sets = localStorage.getItem("learnsets") || "0";
+const numberOfSets = JSON.parse(sets).length || 0;
+
+document.getElementById("numberOfSets").textContent = numberOfSets;

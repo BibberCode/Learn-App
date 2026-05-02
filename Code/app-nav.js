@@ -9,6 +9,10 @@ class AppNav extends HTMLElement {
     this.init();
   }
 
+  getBasePath() {
+    return location.hostname.includes("github.io") ? "/Learn-App" : "";
+  }
+
   render() {
     this.shadowRoot.innerHTML = `
       <style>
@@ -89,11 +93,11 @@ class AppNav extends HTMLElement {
       <div class="nav">
         <div class="bubble"></div>
 
-        <button data-page="/Learn-App/index"><span>🏠</span>Home</button>
-        <button data-page="/Learn-App/Code/cards/cards"><span>📚</span>Karten</button>
-        <button data-page="/Learn-App/Code/learn/learn"><span>🎓</span>Lernen</button>
-        <button data-page="/Learn-App/Code/stats/stats"><span>📊</span>Statistik</button>
-        <button data-page="/Learn-App/Code/profile/profile"><span>👤</span>Profil</button>
+        <button data-page="/index"><span>🏠</span>Home</button>
+        <button data-page="/Code/cards/cards"><span>📚</span>Karten</button>
+        <button data-page="/Code/learn/learn"><span>🎓</span>Lernen</button>
+        <button data-page="/Code/stats/stats"><span>📊</span>Statistik</button>
+        <button data-page="/Code/profile/profile"><span>👤</span>Profil</button>
       </div>
     `;
   }
@@ -103,13 +107,15 @@ class AppNav extends HTMLElement {
     const bubble = this.shadowRoot.querySelector(".bubble");
     const buttons = this.shadowRoot.querySelectorAll("button");
 
+    const base = this.getBasePath();
+    const currentPath = location.pathname.replace(base, "");
+
     const moveBubble = (el) => {
       const elRect = el.getBoundingClientRect();
       const navRect = nav.getBoundingClientRect();
-      const left = elRect.left - navRect.left;
 
       bubble.style.width = elRect.width + "px";
-      bubble.style.transform = `translateX(${left}px)`;
+      bubble.style.transform = `translateX(${elRect.left - navRect.left}px)`;
     };
 
     const setActive = (btn) => {
@@ -118,32 +124,32 @@ class AppNav extends HTMLElement {
       moveBubble(btn);
     };
 
+    const normalize = (p) =>
+      p.endsWith(".html") ? p : p + ".html";
+
     buttons.forEach(btn => {
       btn.addEventListener("click", () => {
-        setActive(btn);
-
-        if (btn.dataset.page) {
-          window.location.href = btn.dataset.page + ".html";
-        }
+        const target = normalize(btn.dataset.page);
+        window.location.href = base + target;
       });
     });
 
-    // aktive Seite erkennen
-    const path = window.location.pathname;
-
+    // Active Button erkennen
     let activeBtn = buttons[0];
 
     buttons.forEach(btn => {
-      if (path.includes(btn.dataset.page)) {
+      const target = normalize(btn.dataset.page);
+
+      if (
+        currentPath.endsWith(target) ||
+        (btn.dataset.page === "/index" &&
+          (currentPath === "/" || currentPath === "/index.html"))
+      ) {
         activeBtn = btn;
       }
     });
 
-    
-
-    const initBubble = () => {
-      setActive(activeBtn);
-    };
+    const initBubble = () => setActive(activeBtn);
 
     if (document.fonts?.ready) {
       document.fonts.ready.then(() =>
