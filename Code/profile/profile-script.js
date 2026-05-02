@@ -68,5 +68,4 @@ window.addEventListener("DOMContentLoaded", () => {
       reader.readAsDataURL(file);
     });
   }
-
 });

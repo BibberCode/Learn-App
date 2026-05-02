@@ -89,11 +89,11 @@ class AppNav extends HTMLElement {
       <div class="nav">
         <div class="bubble"></div>
 
-        <button data-page="index"><span>🏠</span>Home</button>
-        <button data-page="code/cards/cards"><span>📚</span>Karten</button>
-        <button data-page="code/learn/learn"><span>🎓</span>Lernen</button>
-        <button data-page="code/stats/stats"><span>📊</span>Statistik</button>
-        <button data-page="code/profile/profile"><span>👤</span>Profil</button>
+        <button data-page="/Learn-App/index"><span>🏠</span>Home</button>
+        <button data-page="/Learn-App/Code/cards/cards"><span>📚</span>Karten</button>
+        <button data-page="/Learn-App/Code/learn/learn"><span>🎓</span>Lernen</button>
+        <button data-page="/Learn-App/Code/stats/stats"><span>📊</span>Statistik</button>
+        <button data-page="/Learn-App/Code/profile/profile"><span>👤</span>Profil</button>
       </div>
     `;
   }
