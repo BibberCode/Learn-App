@@ -53,6 +53,7 @@ function loadSet(name) {
 
   document.getElementById("currentSetName").textContent = set.name || "Unbenanntes Set";
   document.getElementById("description").textContent = set.description || "Keine Beschreibung vorhanden.";
+  document.getElementById("emoji").textContent = set.emoji || "📘";
 }
 
 // ===============================
@@ -199,4 +200,90 @@ function deleteSet() {
   localStorage.removeItem("currentSetName");
 
   window.location.href = "./cards.html";
+}
+
+
+// ===============================
+// EMOJI PICKER
+// ===============================
+
+const emojis = ["😀","😂","🔥","📘","➗","⚡","💡","🎯","🚀","❤️",""];
+
+let picker;
+let emojiBtn;
+
+// Picker initialisieren NACH DOM Load
+window.addEventListener("DOMContentLoaded", () => {
+  picker = document.getElementById("emojiPicker");
+  emojiBtn = document.getElementById("emoji");
+
+  if (!picker || !emojiBtn) return;
+
+  buildEmojiPicker();
+
+  // Emoji fürs aktuelle Set laden
+  loadEmojiForCurrentSet();
+});
+
+
+// PICKER BAUEN
+function buildEmojiPicker() {
+  emojis.forEach(e => {
+    const btn = document.createElement("button");
+    btn.textContent = e;
+
+    btn.onclick = () => {
+      selectEmoji(e);
+    };
+
+    picker.appendChild(btn);
+  });
+}
+
+
+// TOGGLE
+function toggleEmojiPicker() {
+  if (!picker) return;
+  picker.classList.toggle("hidden");
+}
+
+
+// EMOJI AUSWÄHLEN (IM SET SPEICHERN)
+function selectEmoji(emoji) {
+  if (!emojiBtn) return;
+
+  const currentName = (localStorage.getItem("currentSetName") || "").trim();
+  if (!currentName) return;
+
+  let learnsets = JSON.parse(localStorage.getItem("learnsets")) || [];
+
+  const set = learnsets.find(s => (s.name || "").trim() === currentName);
+
+  if (!set) return;
+
+  // 👉 im Set speichern
+  set.emoji = emoji;
+
+  localStorage.setItem("learnsets", JSON.stringify(learnsets));
+
+  // UI updaten
+  emojiBtn.textContent = emoji;
+
+  picker.classList.add("hidden");
+}
+
+
+// EMOJI LADEN
+function loadEmojiForCurrentSet() {
+  const currentName = (localStorage.getItem("currentSetName") || "").trim();
+  if (!currentName || !emojiBtn) return;
+
+  const learnsets = JSON.parse(localStorage.getItem("learnsets")) || [];
+  const set = learnsets.find(s => (s.name || "").trim() === currentName);
+
+  if (set?.emoji) {
+    emojiBtn.textContent = set.emoji;
+  } else {
+    emojiBtn.textContent = "📘";
+  }
 }

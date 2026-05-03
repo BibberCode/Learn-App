@@ -11,13 +11,30 @@
 
 <body>
 
-    baustelle
+<div class="container">
+    <!-- HEADER -->
+    <div class="header">
+    <div class="logo">Lernen</div>
+    <div class="streak">🔥 <span id="streak"></span> Streak</div>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-bottom: 5px;">Hier kannst du lernen!</h3>
+        <div class="subtext" style="margin-bottom: 20px; margin-top: 10px;"">Wähle ein Lernset aus, um loszulegen. Oder erstelle ein <a href="../cards/cards.html">neues Lernset</a>.</div>
+        <div class="grid" id="learnsetList"></div>
 
 
+    </div>
+
+
+<!-- NAV -->
 <script src="../app-nav.js" defer></script>
 <app-nav></app-nav>
 
-<script src="../home/frontend/script.js"></script>
+<!-- SCRIPTS -->
+<script src="../home/frontend/times.js"></script>
+<script src="../home/frontend/streak.js" defer></script>
+<script src="./learn.js" defer></script>
 
 </body>
 </html>

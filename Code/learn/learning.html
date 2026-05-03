@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statistik</title>
+
+<link rel="stylesheet" href="../home/frontend/style.css">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">Lernen</div>
+    <div class="streak">📊 <span id="progressText">0 / 0</span></div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="card">
+    <div class="progress-bar">
+      <div id="progressBar" class="progress" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- KARTE -->
+  <div class="card" id="flashcard">
+
+    <h2 id="question">Frage</h2>
+
+    <p id="answer" style="display:none; margin-top:15px;">
+      Antwort
+    </p>
+
+  </div>
+
+  <!-- CONFIDENCE -->
+  <div class="card" id="confidenceBox">
+
+    <h3>Wie sicher warst du?</h3>
+
+    <div class="grid" style="justify-items: center; display: flex;">
+      <button class="button" data-level="5">❌ Geraten</button>
+      <button class="button" data-level="4">👎 Unsicher</button>
+      <button class="button" data-level="3">😐 Vielleicht</button>
+      <button class="button" data-level="2">👍 Sicher</button>
+      <button class="button" data-level="1">✅ Sehr sicher</button>
+
+    </div>
+
+  </div>
+
+
+  <!-- AKTIONEN -->
+  <div class="card">
+
+    <button class="button" id="flipBtn">
+      Antwort anzeigen
+    </button>
+
+    <button class="button" id="nextBtn" style="margin-top:10px; display:none;">
+      Nächste Karte
+    </button>
+
+  </div>
+
+</div>
+
+<!-- NAV -->
+<script src="../app-nav.js" defer></script>
+<app-nav></app-nav>
+
+<!-- SCRIPT -->
+<script src="../home/frontend/times.js" defer></script>
+<script src="./learning.js" defer></script>
+
+</body>
+</html>

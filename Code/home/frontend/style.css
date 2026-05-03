@@ -161,3 +161,27 @@ input {
 input:focus {
   border-color: #1f6f4a;
 }
+
+/* emoji picker */
+.emoji-picker {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+  background: white;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  position: absolute;
+  margin-top: 10px;
+}
+
+.emoji-picker button {
+  font-size: 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}

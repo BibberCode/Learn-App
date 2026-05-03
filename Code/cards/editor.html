@@ -20,9 +20,19 @@
 
   <!-- LERNSET -->
   <div class="card profile-card">
-    <button onclick="deleteSet()" style="background: transparent; border: none;">🗑️ Lernset löschen</button>
+    <button onclick="deleteSet()" style="background: transparent; border: none; cursor: pointer;">🗑️ Lernset löschen</button>
 
-    <h3 id="currentSetName"></h3>
+  <h3>
+    <button id="emoji" onclick="toggleEmojiPicker()"
+      style="background: transparent; border: none; font-size: 22px; cursor: pointer;">
+      📘
+    </button>
+
+    <span id="currentSetName"></span>
+  </h3>
+
+  <div id="emojiPicker" class="emoji-picker hidden"></div>
+    
     <div class="small-text" id="description"></div>
 
     <div style="margin-top: 30px; margin-bottom: 5px;">Name des Lernsets:</div>

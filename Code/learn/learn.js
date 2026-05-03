@@ -59,7 +59,7 @@ function addLearnset() {
   titleEl.value = "";
   descEl.value = "";
 
-  window.location.href = "./editor.html";
+  window.location.href = "./learning.html";
 }
 
 
@@ -94,15 +94,13 @@ function renderLearnsets() {
     count.textContent = `${set.qa ? set.qa.length : 0} Karten`;
 
     const desc = document.createElement("p");
-    desc.className = "small-text";
-    desc.style.marginTop = "8px";
     desc.textContent = set.description || "";
 
     card.append(title, count, desc);
 
     card.onclick = () => {
       localStorage.setItem("currentSetName", set.name);
-      window.location.href = "./editor.html";
+      window.location.href = "./learning.html";
     };
 
     container.appendChild(card);
