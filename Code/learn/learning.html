@@ -30,11 +30,9 @@
   <div class="card" id="flashcard">
 
     <h2 id="question">Frage</h2>
-    <input id="userAnswer" placeholder="Deine Antwort" style="margin-top: 0px;">
-    <h5 id="answer" style="display:none;">dsfsadf</h5>
+    <input id="userAnswer" placeholder="Deine Antwort" style="margin-top: 0px;"></input>
 
-    <p id="evaluation" style="display:none; margin-top:15px;"></p>
-
+    <h5 id="evaluation" style="display:none; margin-top:15px;"></h5>
   </div>
 
   <!-- CONFIDENCE -->
@@ -47,7 +45,7 @@
       <button class="button" data-level="4">👎 Unsicher</button>
       <button class="button" data-level="3">😐 Vielleicht</button>
       <button class="button" data-level="2">👍 Sicher</button>
-      <button class="button" data-level="1">✅ Sehr sicher</button>
+      <button class="button" data-level="0">✅ Sehr sicher</button>
     </div>
 
   </div>
@@ -56,7 +54,7 @@
   <!-- AKTIONEN -->
   <div class="card" id="nextBtn">
 
-    <button class="button" style="margin-top:10px; display:none;">
+    <button class="button" style="margin-top:10px; display:block;" onclick="nextCard()">
       Nächste Karte
     </button>
 

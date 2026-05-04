@@ -48,8 +48,7 @@ function addLearnset() {
     name: title,
     emoji: "📘",
     description,
-    qa: [],
-    index: 0 // default index for new sets
+    qa: [{ frage: "Beispiel Frage", antwort: "Beispiel Antwort", sicherheit: 0 }],
   });
 
   saveLearnsets(learnsets);

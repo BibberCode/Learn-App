@@ -18,12 +18,13 @@ function showCard() {
 
 function compareAnswer(userAnswer, correctAnswer) {
   const evalBox = document.getElementById("evaluation");
+  evalBox.style.display = "block";
 
   userAnswer = (userAnswer || "").toLowerCase().trim();
   correctAnswer = (correctAnswer || "").toLowerCase().trim();
 
   if (userAnswer === correctAnswer) {
-    evalBox.textContent = "Richtig! Die Antwort ist: " + correctAnswer;
+    evalBox.textContent = "Richtig! Antwort: " + correctAnswer;
     evalBox.style.color = "green";
   } else {
     evalBox.textContent = "Falsch! Richtige Antwort: " + correctAnswer;
@@ -31,55 +32,45 @@ function compareAnswer(userAnswer, correctAnswer) {
   }
 }
 
-/* ---------------- Level / Gewicht setzen ---------------- */
+/* ---------------- CONFIDENCE ---------------- */
 
 document.querySelectorAll("[data-level]").forEach(btn => {
   btn.onclick = () => {
     const level = Number(btn.dataset.level);
 
-    const name = localStorage.getItem("currentSetName");
-    const i = learnsets.findIndex(s => s.name === name);
-
-    if (i !== -1) {
-      learnsets[i].index = level; // Gewicht des Sets
-      localStorage.setItem("learnsets", JSON.stringify(learnsets));
-    }
-
     const userAnswer = document.getElementById("userAnswer").value;
 
     compareAnswer(userAnswer, currentCard.antwort);
 
-    document.getElementById("nextBtn").style.display = "block";
+    // 👉 Level in KARTEN speichern (wichtig!)
+    const name = localStorage.getItem("currentSetName");
+    const set = learnsets.find(s => s.name === name);
 
-    nextCard();
+    if (set) {
+      const card = set.qa.find(q => q.frage === currentCard.frage);
+
+      if (card) {
+        card.sicherheit = level;
+      }
+
+      localStorage.setItem("learnsets", JSON.stringify(learnsets));
+    }
+
+    document.getElementById("nextBtn").style.display = "block";
   };
 });
 
-/* ---------------- Weighted Set Auswahl ---------------- */
+/* ---------------- NEXT CARD ---------------- */
 
 function nextCard() {
-  let total = 0;
+  const name = localStorage.getItem("currentSetName");
+  const set = learnsets.find(s => s.name === name);
 
-  for (const set of learnsets) {
-    total += set.index || 1; // Schutz gegen 0
-  }
+  if (!set || !set.qa.length) return;
 
-  let random = Math.random() * total;
+  currentCard = set.qa[Math.floor(Math.random() * set.qa.length)];
 
-  let selectedSet = null;
-
-  for (const set of learnsets) {
-    random -= (set.index || 1);
-    if (random < 0) {
-      selectedSet = set;
-      break;
-    }
-  }
-
-  if (!selectedSet || !selectedSet.qa || selectedSet.qa.length === 0) return;
-
-  currentCard =
-    selectedSet.qa[Math.floor(Math.random() * selectedSet.qa.length)];
+  document.getElementById("userAnswer").value = "";
 
   showCard();
 }
