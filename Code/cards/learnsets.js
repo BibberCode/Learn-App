@@ -48,7 +48,8 @@ function addLearnset() {
     name: title,
     emoji: "📘",
     description,
-    qa: []
+    qa: [],
+    index: 0 // default index for new sets
   });
 
   saveLearnsets(learnsets);

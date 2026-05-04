@@ -30,10 +30,10 @@
   <div class="card" id="flashcard">
 
     <h2 id="question">Frage</h2>
+    <input id="userAnswer" placeholder="Deine Antwort" style="margin-top: 0px;">
+    <h5 id="answer" style="display:none;">dsfsadf</h5>
 
-    <p id="answer" style="display:none; margin-top:15px;">
-      Antwort
-    </p>
+    <p id="evaluation" style="display:none; margin-top:15px;"></p>
 
   </div>
 
@@ -48,20 +48,15 @@
       <button class="button" data-level="3">😐 Vielleicht</button>
       <button class="button" data-level="2">👍 Sicher</button>
       <button class="button" data-level="1">✅ Sehr sicher</button>
-
     </div>
 
   </div>
 
 
   <!-- AKTIONEN -->
-  <div class="card">
+  <div class="card" id="nextBtn">
 
-    <button class="button" id="flipBtn">
-      Antwort anzeigen
-    </button>
-
-    <button class="button" id="nextBtn" style="margin-top:10px; display:none;">
+    <button class="button" style="margin-top:10px; display:none;">
       Nächste Karte
     </button>
 

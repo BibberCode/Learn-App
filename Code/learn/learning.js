@@ -1,41 +1,85 @@
-let currentIndex = 0;
-let queue = [];
+let currentCard = null;
+const learnsets = JSON.parse(localStorage.getItem("learnsets")) || [];
+
+nextCard();
+
+/* ---------------- UI ---------------- */
 
 function showCard() {
-  const card = queue[currentIndex];
+  if (!currentCard) return;
 
-  document.getElementById("question").textContent = card.frage;
-  document.getElementById("answer").textContent = card.antwort;
+  document.getElementById("question").textContent = currentCard.frage;
 
-  document.getElementById("answer").style.display = "none";
-  document.getElementById("confidenceBox").style.display = "none";
+  document.getElementById("evaluation").textContent = "";
   document.getElementById("nextBtn").style.display = "none";
 }
 
-document.getElementById("flipBtn").onclick = () => {
-  document.getElementById("answer").style.display = "block";
-  document.getElementById("confidenceBox").style.display = "block";
-};
+/* ---------------- Antwort prüfen ---------------- */
+
+function compareAnswer(userAnswer, correctAnswer) {
+  const evalBox = document.getElementById("evaluation");
+
+  userAnswer = (userAnswer || "").toLowerCase().trim();
+  correctAnswer = (correctAnswer || "").toLowerCase().trim();
+
+  if (userAnswer === correctAnswer) {
+    evalBox.textContent = "Richtig! Die Antwort ist: " + correctAnswer;
+    evalBox.style.color = "green";
+  } else {
+    evalBox.textContent = "Falsch! Richtige Antwort: " + correctAnswer;
+    evalBox.style.color = "red";
+  }
+}
+
+/* ---------------- Level / Gewicht setzen ---------------- */
 
 document.querySelectorAll("[data-level]").forEach(btn => {
   btn.onclick = () => {
     const level = Number(btn.dataset.level);
 
-    // simple confidence logic (später erweiterbar)
-    if (level === 1) queue.push(queue[currentIndex]); // schwer → wiederholen
-    if (level === 2) queue.splice(currentIndex + 2, 0, queue[currentIndex]);
-    if (level === 3) queue.push(queue[currentIndex]);
+    const name = localStorage.getItem("currentSetName");
+    const i = learnsets.findIndex(s => s.name === name);
+
+    if (i !== -1) {
+      learnsets[i].index = level; // Gewicht des Sets
+      localStorage.setItem("learnsets", JSON.stringify(learnsets));
+    }
+
+    const userAnswer = document.getElementById("userAnswer").value;
+
+    compareAnswer(userAnswer, currentCard.antwort);
+
+    document.getElementById("nextBtn").style.display = "block";
 
     nextCard();
   };
 });
 
-function nextCard() {
-  currentIndex++;
+/* ---------------- Weighted Set Auswahl ---------------- */
 
-  if (currentIndex >= queue.length) {
-    currentIndex = 0;
+function nextCard() {
+  let total = 0;
+
+  for (const set of learnsets) {
+    total += set.index || 1; // Schutz gegen 0
   }
+
+  let random = Math.random() * total;
+
+  let selectedSet = null;
+
+  for (const set of learnsets) {
+    random -= (set.index || 1);
+    if (random < 0) {
+      selectedSet = set;
+      break;
+    }
+  }
+
+  if (!selectedSet || !selectedSet.qa || selectedSet.qa.length === 0) return;
+
+  currentCard =
+    selectedSet.qa[Math.floor(Math.random() * selectedSet.qa.length)];
 
   showCard();
 }
