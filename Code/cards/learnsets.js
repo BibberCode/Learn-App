@@ -24,7 +24,7 @@ function addLearnset() {
   const descEl = document.getElementById("description");
 
   const title = titleEl.value.trim();
-  let description = descEl.value.trim();
+  let description = descEl.value;
 
   if (!title) return;
 
@@ -48,7 +48,8 @@ function addLearnset() {
     name: title,
     emoji: "📘",
     description,
-    qa: [{ frage: "Beispiel Frage", antwort: "Beispiel Antwort", sicherheit: 0 }],
+    qa: [{frage: "", antwort: "", sicherheit: 0 }],
+    mode: ""
   });
 
   saveLearnsets(learnsets);
