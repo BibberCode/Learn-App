@@ -153,7 +153,9 @@ function saveName() {
 
 function saveDescription() {
   const input = document.getElementById("setDescription");
-  const newDescription = input.value.trim();
+  const newDescription = input.value;
+
+  if (!newDescription) return
 
   if (!newDescription) return;
 

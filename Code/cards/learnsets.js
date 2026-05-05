@@ -24,7 +24,7 @@ function addLearnset() {
   const descEl = document.getElementById("description");
 
   const title = titleEl.value.trim();
-  let description = descEl.value.trim();
+  let description = descEl.value;
 
   if (!title) return;
 

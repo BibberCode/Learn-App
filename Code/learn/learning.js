@@ -24,7 +24,7 @@ function compareAnswer(userAnswer, correctAnswer) {
   correctAnswer = (correctAnswer || "").toLowerCase().trim();
 
   if (userAnswer === correctAnswer) {
-    evalBox.textContent = "Richtig! Antwort: " + correctAnswer;
+    evalBox.textContent = "Richtig! Antwort: " + currentCard.antwort;
     evalBox.style.color = "green";
   } else {
     evalBox.textContent = "Falsch! Richtige Antwort: " + correctAnswer;
