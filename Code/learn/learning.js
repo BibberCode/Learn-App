@@ -1,5 +1,6 @@
 let currentCard = null;
 const learnsets = JSON.parse(localStorage.getItem("learnsets")) || [];
+let lastCard = null;
 
 nextCard();
 
@@ -21,7 +22,7 @@ function updateFinishedCardsBar() {
   if (!set || !set.qa.length) return;
 
   const total = set.qa.length;
-  const low = set.qa.filter(c => (c.sicherheit ?? 1) <= 1).length;
+  const low = set.qa.filter(c => (c.sicherheit ?? 3) <= 0).length;
 
   const percent = (low / total) * 100;
 
@@ -89,7 +90,29 @@ function nextCard() {
   const finishedCards = set.qa.filter(card => (card.sicherheit ?? 1) <= 1);
 
   if (finishedCards.length === set.qa.length) {
-    document.getElementById("question").textContent = "Alle Karten geschafft 🎉";
+    const question = document.getElementById("question");
+    const input = document.getElementById("userAnswer");
+    const box = document.getElementById("confidenceBox");
+    const btn = document.getElementById("nextBtnButton");
+    const evalBox = document.getElementById("evaluation");
+
+    question.textContent = "Alle Karten geschafft 🎉";
+    input.style.display = "none";
+    box.style.display = "none";
+    evalBox.style.display = "none";
+
+    btn.textContent = "Zurück zur Übersicht";
+
+    btn.onclick = () => {
+      set.qa.forEach(card => {
+        card.sicherheit = 3;
+      });
+
+      localStorage.setItem("learnsets", JSON.stringify(learnsets));
+
+      window.location.href = "./learn.html";
+    };
+
     return;
   }
 
@@ -107,28 +130,8 @@ function getWeightedCard(cards) {
   const pool = [];
 
   for (const card of cards) {
-    const s = card.sicherheit ?? 3; // Standard: mittel
-
-    let weight;
-
-    if (s === 1) {
-      weight = 1; // sehr sicher → selten
-    } 
-    else if (s === 2) {
-      weight = 2;
-    } 
-    else if (s === 3) {
-      weight = 3;
-    } 
-    else if (s === 4) {
-      weight = 5;
-    } 
-    else if (s === 5) {
-      weight = 8; // sehr unsicher → sehr oft
-    } 
-    else {
-      weight = 3; // fallback
-    }
+    const s = card.sicherheit ?? 3;
+    const weight = Math.pow(2, s);
 
     for (let i = 0; i < weight; i++) {
       pool.push(card);
@@ -139,5 +142,13 @@ function getWeightedCard(cards) {
     return cards[Math.floor(Math.random() * cards.length)];
   }
 
-  return pool[Math.floor(Math.random() * pool.length)];
+  let picked;
+
+  do {
+    picked = pool[Math.floor(Math.random() * pool.length)];
+  } while (picked === lastCard && pool.length > 1);
+
+  lastCard = picked;
+
+  return picked;
 }
