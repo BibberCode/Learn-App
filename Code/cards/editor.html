@@ -43,6 +43,13 @@
 
     <div style="margin-top: 30px; margin-bottom: 5px;">Beschreibung des Lernsets:</div>
     <input id="setDescription" placeholder="Beschreibung des Lernsets">
+
+
+    <div style="margin-top: 30px; margin-bottom: 10px;">Modus:</div>
+    <div class="mode-switch">
+      <button class="mode active" data-mode="self-compare">Selbst vergleichen</button>
+      <button class="mode" data-mode="input-answer">Antwort eingeben</button>
+    </div>
   </div>
 
   <!-- KARTEN -->
@@ -74,7 +81,7 @@
 
   <!-- SAVE -->
   <button class="button" style="margin-top: 30px;"
-          onclick="saveAll(); saveName(); saveDescription()">
+          onclick="saveAll(); saveName(); saveDescription(); saveMode();">
     + Speichern
   </button>
 

@@ -159,7 +159,7 @@ input {
 }
 
 input:focus {
-  border-color: #1f6f4a;
+  border-color: #17653c;
 }
 
 /* emoji picker */
@@ -184,4 +184,37 @@ input:focus {
 
 .hidden {
   display: none;
+}
+
+/*Mode selector*/
+.mode-switch {
+  display: flex;
+  gap: 8px;
+  background: #efefef;
+  padding: 6px;
+  border-radius: 12px;
+  width: fit-content;
+
+  margin: 0 auto;
+}
+
+.mode {
+  border: none;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  background: transparent;
+  color: #000000;
+  transition: 0.2s;
+}
+
+.mode:hover {
+  background: rgba(255,255,255,0.08);
+  color: rgb(137, 137, 137);
+}
+
+.mode.active {
+  background: #17653c;
+  color: white;
+  box-shadow: 0 2px 10px rgba(23, 101, 60, 0.4);
 }

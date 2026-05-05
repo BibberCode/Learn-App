@@ -49,6 +49,7 @@ function addLearnset() {
     emoji: "📘",
     description,
     qa: [{ frage: "Beispiel Frage", antwort: "Beispiel Antwort", sicherheit: 0 }],
+    mode: "self-compare",
   });
 
   saveLearnsets(learnsets);

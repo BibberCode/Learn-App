@@ -120,6 +120,8 @@ function saveAll() {
 
   localStorage.setItem("learnsets", JSON.stringify(learnsets));
 
+  allowToExit = true;
+
   window.location.href = "./cards.html";
 }
 
@@ -152,6 +154,8 @@ function saveName() {
 function saveDescription() {
   const input = document.getElementById("setDescription");
   const newDescription = input.value.trim();
+
+  if (!newDescription) return;
 
   const currentName = (localStorage.getItem("currentSetName") || "").trim();
 
@@ -287,3 +291,44 @@ function loadEmojiForCurrentSet() {
     emojiBtn.textContent = "📘";
   }
 }
+
+// ===============================
+// MODUS SWITCH
+// ===============================
+const buttons = document.querySelectorAll(".mode");
+let mode = "self-compare"; // default Wert
+
+buttons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    buttons.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    mode = btn.dataset.mode;
+
+    localStorage.setItem("mode", mode);
+  });
+});
+
+function saveMode() {
+  const currentName = (localStorage.getItem("currentSetName") || "").trim();
+  if (!currentName) return;
+
+  let learnsets = JSON.parse(localStorage.getItem("learnsets")) || [];
+
+  const set = learnsets.find(s => (s.name || "").trim() === currentName);
+  if (!set) return;
+
+  // aktuellen Mode aus globaler Variable nehmen
+  set.mode = mode;
+
+  localStorage.setItem("learnsets", JSON.stringify(learnsets));
+}
+
+
+let allowToExit = false;
+window.addEventListener("beforeunload", (e) => {
+  if (allowToExit) return
+
+  e.preventDefault();
+  e.returnValue = "";
+});
