@@ -87,6 +87,12 @@ body {
   }
 }
 
+/* Handy */
+@media (max-width: 768px) {
+
+}
+
+
 .small-card {
   background: white;
   padding: 14px;
