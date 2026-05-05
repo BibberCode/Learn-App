@@ -44,13 +44,15 @@ function addLearnset() {
     return;
   }
 
-  learnsets.push({
+  learnsets.push(
+  {
     name: title,
     emoji: "📘",
     description,
     qa: [{ frage: "Beispiel Frage", antwort: "Beispiel Antwort", sicherheit: 0 }],
     mode: "self-compare",
-  });
+  }
+  );
 
   saveLearnsets(learnsets);
 

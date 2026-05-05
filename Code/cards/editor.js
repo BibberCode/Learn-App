@@ -205,6 +205,8 @@ function deleteSet() {
   localStorage.setItem("learnsets", JSON.stringify(newList));
   localStorage.removeItem("currentSetName");
 
+  allowToExit = true;
+
   window.location.href = "./cards.html";
 }
 
