@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback</title>
+
+  <link rel="stylesheet" href="../home/frontend/style.css">
+
+  <style>
+    /* kleine zusätzliche Animationen */
+    .button {
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    }
+
+    .card {
+      transition: transform 0.15s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">Learn App</div>
+    <div class="streak">Support</div>
+  </div>
+
+  <!-- INFO -->
+  <div class="card">
+    <h2>Probleme melden</h2>
+    <p class="subtext">
+      Hier kannst du schnell Bugs melden oder Ideen für neue Funktionen einsenden.
+    </p>
+  </div>
+
+  <!-- HINWEIS -->
+  <p class="small-text" style="margin: 8px 4px;">
+    ⚠️ Bitte nur ernst gemeinte Meldungen (kein Spam).
+  </p>
+
+  <!-- BUG -->
+  <div class="card">
+    <h3>🐛 Bug melden</h3>
+    <p class="small-text">
+      Wenn etwas nicht funktioniert oder Fehler auftreten.
+    </p>
+
+    <div class="button"
+         onclick="window.open('https://forms.gle/V1j6xAgp8K5nWXrh7', '_blank')">
+      Bug melden
+    </div>
+  </div>
+
+  <!-- IDEA -->
+  <div class="card">
+    <h3>💡 Idee / Verbesserung</h3>
+    <p class="small-text">
+      Neue Funktionen oder Verbesserungen für die Learn App.
+    </p>
+
+    <div class="button"
+         onclick="window.open('https://forms.gle/V1j6xAgp8K5nWXrh7', '_blank')">
+      Idee vorschlagen
+    </div>
+  </div>
+
+  <!-- OPEN SOURCE -->
+  <div class="card">
+    <h3>📦 Open Source</h3>
+    <p class="small-text">
+      Der Code der Learn App ist öffentlich auf GitHub verfügbar.  
+      Du kannst selbst Verbesserungen beitragen oder Fehler fixen.
+    </p>
+
+    <div class="button"
+         onclick="window.open('https://github.com/BibberCode/Learn-App', '_blank')">
+      GitHub öffnen
+    </div>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="card">
+    <h3>ℹ️ Hinweis</h3>
+    <p class="small-text">
+      Dieses Projekt wurde unabhängig entwickelt. Daher können vereinzelt Fehler auftreten.  
+      Jede Rückmeldung hilft, die App zu verbessern.
+    </p>
+  </div>
+
+  <div style="height: 80px;"></div>
+
+</div>
+
+<script src="../app-nav.js"></script>
+<app-nav></app-nav>
+
+</body>
+</html>
