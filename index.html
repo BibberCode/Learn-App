@@ -32,21 +32,18 @@
     <p><strong><span id="timer"></span> / <span id="maxMinutes"></span> min</strong></p>
   </div>
 
-  <!-- LERNSETS -->
+  <!-- WEITERLERNEN -->
+  <h3 style="margin-top: 25px;">Lernsets üben</h3>
+
+  <div class="card">
+    <div class="grid" id="learnsetListLearn"></div>
+  </div>
+
+  <!-- LERNSETS BEARBEITEN -->
   <h3 style="margin-top: 25px;">Lernsets bearbeiten</h3>
 
   <div class="card">
-    <div class="grid" id="learnsetList"></div>
-  </div>
-
-  <!-- WEITERLERNEN -->
-  <h3 style="margin-top: 25px;">Weiterlernen</h3>
-
-  <div class="card">
-    📘
-    <h4>Mathe Formeln</h4>
-    <p>12 Karten fällig</p>
-    <div class="button" style="margin-top: 10px;">Lernen starten</div>
+    <div class="grid" id="learnsetListEdit"></div>
   </div>
 
   <!-- HOW IT WORKS -->
@@ -73,7 +70,7 @@
 <app-nav></app-nav>
 
 <!-- SCRIPTS -->
-<script src="./Code/home/frontend/times.js" defer></script>
+<script src="./Code/home/frontend/uiTime.js" defer></script>
 <script src="./Code/profile/profile-script.js" defer></script>
 <script src="./Code/home/frontend/streak.js" defer></script>
 <script src="./Code/home/frontend/setsRenderHome.js" defer></script>

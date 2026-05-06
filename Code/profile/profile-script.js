@@ -71,7 +71,8 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 
-const sets = localStorage.getItem("learnsets") || "0";
-const numberOfSets = JSON.parse(sets).length || 0;
+const sets = JSON.parse(localStorage.getItem("learnsets") || "[]");
+const numberOfSets = sets.length;
 
-document.getElementById("numberOfSets").textContent = numberOfSets;
+const el = document.getElementById("numberOfSets");
+if (el) el.textContent = numberOfSets;
