@@ -73,8 +73,17 @@ function renderLearnsetsLearn() {
     `;
 
     card.onclick = () => {
-      localStorage.setItem("currentSetName", set.name);
-      window.location.href = "./Code/learn/learning.html";
+      if (set.mode === "self-compare") {
+        localStorage.setItem("currentSetName", set.name);
+        window.location.href = "./Code/learn/self-compare/learning_self-compare.html";
+        return;
+      }
+
+      if (set.mode === "input-answer") {
+        localStorage.setItem("currentSetName", set.name);
+        window.location.href = "./Code/learn/input-answer/learning_input-answer.html";
+        return;
+      }
     };
 
     container.appendChild(card);

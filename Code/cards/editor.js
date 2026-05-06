@@ -1,20 +1,21 @@
 // ===============================
-// STATE
+// STATE (nur EINMAL global)
 // ===============================
 let learnsets = JSON.parse(localStorage.getItem("learnsets")) || [];
 
 const currentSetName = (localStorage.getItem("currentSetName") || "").trim();
 
+let allowToExit = false;
+
 // ===============================
-// INIT (beim Laden der Seite)
+// INIT
 // ===============================
 window.addEventListener("DOMContentLoaded", () => {
-  if (!currentSetName) {
-    console.log("Kein Set ausgewählt");
-    return;
-  }
+  if (!currentSetName) return;
 
   loadSet(currentSetName);
+  initModeSwitch();
+  initEmojiPicker();
 });
 
 // ===============================
@@ -23,15 +24,16 @@ window.addEventListener("DOMContentLoaded", () => {
 function loadSet(name) {
   learnsets = JSON.parse(localStorage.getItem("learnsets")) || [];
 
-  const set = learnsets.find(s => (s.name || "").trim() === name.trim());
-  if (!set) {
-    console.log("Set nicht gefunden:", name);
-    return;
-  }
+  const set = learnsets.find(
+    s => (s.name || "").trim() === name.trim()
+  );
+
+  if (!set) return;
 
   const container = document.getElementById("cardContainer");
-  container.innerHTML = "";
+  if (!container) return;
 
+  container.innerHTML = "";
   set.qa = set.qa || [];
 
   set.qa.forEach(item => {
@@ -51,8 +53,8 @@ function loadSet(name) {
     container.appendChild(card);
   });
 
-  document.getElementById("currentSetName").textContent = set.name || "Unbenanntes Set";
-  document.getElementById("description").textContent = set.description || "Keine Beschreibung vorhanden.";
+  document.getElementById("currentSetName").textContent = set.name || "Unbenannt";
+  document.getElementById("description").textContent = set.description || "Keine Beschreibung";
   document.getElementById("emoji").textContent = set.emoji || "📘";
 }
 
@@ -60,29 +62,29 @@ function loadSet(name) {
 // KARTE HINZUFÜGEN
 // ===============================
 function addCard() {
+  const container = document.getElementById("cardContainer");
+
   const card = document.createElement("div");
   card.className = "card";
 
   card.innerHTML = `
-    <button onclick="deleteCard(this)" style="background:transparent;border:none;">🗑️ Karte löschen</button>
+    <button onclick="deleteCard(this)" style="background:transparent;border:none;">🗑️</button>
 
     <h4>Frage</h4>
-    <input class="frage" placeholder="Frage eingeben">
+    <input class="frage" placeholder="Frage">
 
     <h4 style="margin-top:20px;">Antwort</h4>
-    <input class="antwort" placeholder="Antwort eingeben">
+    <input class="antwort" placeholder="Antwort">
   `;
 
-  document.getElementById("cardContainer").appendChild(card);
+  container.appendChild(card);
 }
 
 // ===============================
 // KARTE LÖSCHEN
 // ===============================
 function deleteCard(btn) {
-    const sure = confirm("Bist du sicher?");
-    if (!sure) return;
-
+  if (!confirm("Bist du sicher?")) return;
   btn.parentElement.remove();
 }
 
@@ -90,14 +92,15 @@ function deleteCard(btn) {
 // SPEICHERN
 // ===============================
 function saveAll() {
-  const raw = localStorage.getItem("currentSetName");
-  if (!raw) return;
-
-  const name = raw.trim();
+  const name = currentSetName;
+  if (!name) return;
 
   let learnsets = JSON.parse(localStorage.getItem("learnsets")) || [];
 
-  const set = learnsets.find(s => (s.name || "").trim() === name);
+  const set = learnsets.find(
+    s => (s.name || "").trim() === name
+  );
+
   if (!set) return;
 
   const frageInputs = document.querySelectorAll(".frage");
@@ -113,7 +116,7 @@ function saveAll() {
       set.qa.push({
         frage: f,
         antwort: a,
-        sicherheit: 3, // default Wert
+        sicherheit: 3
       });
     }
   }
@@ -121,27 +124,25 @@ function saveAll() {
   localStorage.setItem("learnsets", JSON.stringify(learnsets));
 
   allowToExit = true;
-
   window.location.href = "./cards.html";
 }
 
+// ===============================
+// SET NAME / DESCRIPTION
+// ===============================
 function saveName() {
-    //Name ändern
   const input = document.getElementById("setName");
-  const newName = input.value.trim();
+  const newName = input?.value.trim();
 
   if (!newName) return;
 
-  const oldName = (localStorage.getItem("currentSetName") || "").trim();
-
   let learnsets = JSON.parse(localStorage.getItem("learnsets")) || [];
 
-  const set = learnsets.find(s => (s.name || "").trim() === oldName);
+  const set = learnsets.find(
+    s => (s.name || "").trim() === currentSetName
+  );
 
-  if (!set) {
-    console.log("Set nicht gefunden:", oldName);
-    return;
-  }
+  if (!set) return;
 
   set.name = newName;
 
@@ -153,185 +154,142 @@ function saveName() {
 
 function saveDescription() {
   const input = document.getElementById("setDescription");
-  const newDescription = input.value;
-
-  if (!newDescription) return
+  const newDescription = input?.value;
 
   if (!newDescription) return;
 
-  const currentName = (localStorage.getItem("currentSetName") || "").trim();
+  let learnsets = JSON.parse(localStorage.getItem("learnsets")) || [];
+
+  const set = learnsets.find(
+    s => (s.name || "").trim() === currentSetName
+  );
+
+  if (!set) return;
+
+  set.description = newDescription;
+
+  localStorage.setItem("learnsets", JSON.stringify(learnsets));
+  document.getElementById("description").textContent = newDescription;
+}
+
+// ===============================
+// DELETE SET
+// ===============================
+function deleteSet() {
+  if (!confirm("Bist du sicher?")) return;
 
   let learnsets = JSON.parse(localStorage.getItem("learnsets")) || [];
 
-  const set = learnsets.find(s => (s.name || "").trim() === currentName);
-
-  if (!set) {
-    console.log("Set nicht gefunden:", currentName);
-    return;
-  }
-
-  // ✏️ Beschreibung ändern
-  set.description = newDescription || "Keine Beschreibung vorhanden.";
-
-  // 💾 speichern
-  localStorage.setItem("learnsets", JSON.stringify(learnsets));
-
-  // 🖥 UI aktualisieren (falls div)
-  document.getElementById("description").textContent = set.description;
-}
-
-
-function deleteSet() {
-  const name = (localStorage.getItem("currentSetName") || "").trim();
-
-  if (!name) {
-    console.log("Kein currentSetName");
-    return;
-  }
-
-  const sure = confirm("Bist du sicher?");
-  if (!sure) return;
-
-  let learnsets = JSON.parse(localStorage.getItem("learnsets") || "[]");
-
-  console.log("Vorher:", learnsets);
-
   const newList = learnsets.filter(
-    s => (s.name || "").trim() !== name
+    s => (s.name || "").trim() !== currentSetName
   );
-
-  console.log("Nachher:", newList);
 
   localStorage.setItem("learnsets", JSON.stringify(newList));
   localStorage.removeItem("currentSetName");
 
   allowToExit = true;
-
   window.location.href = "./cards.html";
 }
 
-
 // ===============================
-// EMOJI PICKER
+// EMOJI
 // ===============================
-
 const emojis = ["😀","😂","🔥","📘","➗","⚡","💡","🎯","🚀","❤️","🧪","📊","🎭","🎨","🎵","🧬","🕗","🍏"];
 
 let picker;
 let emojiBtn;
 
-// Picker initialisieren NACH DOM Load
-window.addEventListener("DOMContentLoaded", () => {
+function initEmojiPicker() {
   picker = document.getElementById("emojiPicker");
   emojiBtn = document.getElementById("emoji");
 
   if (!picker || !emojiBtn) return;
 
-  buildEmojiPicker();
+  picker.innerHTML = "";
 
-  // Emoji fürs aktuelle Set laden
-  loadEmojiForCurrentSet();
-});
-
-
-// PICKER BAUEN
-function buildEmojiPicker() {
   emojis.forEach(e => {
     const btn = document.createElement("button");
     btn.textContent = e;
 
-    btn.onclick = () => {
-      selectEmoji(e);
-    };
+    btn.onclick = () => selectEmoji(e);
 
     picker.appendChild(btn);
   });
+
+  loadEmoji();
 }
 
-
-// TOGGLE
 function toggleEmojiPicker() {
-  if (!picker) return;
-  picker.classList.toggle("hidden");
+  picker?.classList.toggle("hidden");
 }
 
-
-// EMOJI AUSWÄHLEN (IM SET SPEICHERN)
 function selectEmoji(emoji) {
-  if (!emojiBtn) return;
-
-  const currentName = (localStorage.getItem("currentSetName") || "").trim();
-  if (!currentName) return;
-
-  let learnsets = JSON.parse(localStorage.getItem("learnsets")) || [];
-
-  const set = learnsets.find(s => (s.name || "").trim() === currentName);
+  const set = learnsets.find(
+    s => (s.name || "").trim() === currentSetName
+  );
 
   if (!set) return;
 
-  // 👉 im Set speichern
   set.emoji = emoji;
 
   localStorage.setItem("learnsets", JSON.stringify(learnsets));
 
-  // UI updaten
   emojiBtn.textContent = emoji;
-
   picker.classList.add("hidden");
 }
 
+function loadEmoji() {
+  const set = learnsets.find(
+    s => (s.name || "").trim() === currentSetName
+  );
 
-// EMOJI LADEN
-function loadEmojiForCurrentSet() {
-  const currentName = (localStorage.getItem("currentSetName") || "").trim();
-  if (!currentName || !emojiBtn) return;
+  emojiBtn.textContent = set?.emoji || "📘";
+}
 
-  const learnsets = JSON.parse(localStorage.getItem("learnsets")) || [];
-  const set = learnsets.find(s => (s.name || "").trim() === currentName);
+// ===============================
+// MODE SWITCH (FIXED)
+// ===============================
+function initModeSwitch() {
+  const buttons = document.querySelectorAll(".mode");
 
-  if (set?.emoji) {
-    emojiBtn.textContent = set.emoji;
-  } else {
-    emojiBtn.textContent = "📘";
+  const set = learnsets.find(
+    s => (s.name || "").trim() === currentSetName
+  );
+
+  let mode = set?.mode || "self-compare";
+
+  function applyActiveMode() {
+    buttons.forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.mode === mode);
+    });
   }
-}
 
-// ===============================
-// MODUS SWITCH
-// ===============================
-const buttons = document.querySelectorAll(".mode");
-let mode = "self-compare"; // default Wert
+  applyActiveMode();
 
-buttons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    buttons.forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      mode = btn.dataset.mode;
 
-    mode = btn.dataset.mode;
+      applyActiveMode();
 
-    localStorage.setItem("mode", mode);
+      const set = learnsets.find(
+        s => (s.name || "").trim() === currentSetName
+      );
+
+      if (!set) return;
+
+      set.mode = mode;
+
+      localStorage.setItem("learnsets", JSON.stringify(learnsets));
+    });
   });
-});
-
-function saveMode() {
-  const currentName = (localStorage.getItem("currentSetName") || "").trim();
-  if (!currentName) return;
-
-  let learnsets = JSON.parse(localStorage.getItem("learnsets")) || [];
-
-  const set = learnsets.find(s => (s.name || "").trim() === currentName);
-  if (!set) return;
-
-  // aktuellen Mode aus globaler Variable nehmen
-  set.mode = mode;
-
-  localStorage.setItem("learnsets", JSON.stringify(learnsets));
 }
 
-
-let allowToExit = false;
+// ===============================
+// EXIT GUARD
+// ===============================
 window.addEventListener("beforeunload", (e) => {
-  if (allowToExit) return
+  if (allowToExit) return;
 
   e.preventDefault();
   e.returnValue = "";

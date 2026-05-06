@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statistik</title>
+
+<link rel="stylesheet" href="../../home/frontend/style.css">
+
+</head>
+
+<body>
+
+  <div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">Lernen</div>
+    <div class="streak">📊 <span id="finishedCardsText">0 / 0</span></div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="card">
+    <div class="progress-bar">
+      <div id="finishedCardsBar" class="progress" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- KARTE -->
+  <div class="card" id="flashcard">
+
+    <h2 id="question">Frage</h2>
+
+    <h5 id="evaluation" style="display:none; margin-top:15px; margin-bottom: 1px; color: #6b7280;"></h5>
+  </div>
+
+  <!-- CONFIDENCE -->
+  <div class="card" id="confidenceBox">
+    <h3>Wie sicher bist du?</h3>
+
+    <div class="confidence-buttons">
+      <button class="button" data-level="5">❌ Geraten</button>
+      <button class="button" data-level="4">👎 Unsicher</button>
+      <button class="button" data-level="3">😐 Vielleicht</button>
+      <button class="button" data-level="2">👍 Sicher</button>
+      <button class="button" data-level="1">✅ Sehr sicher</button>
+    </div>
+  </div>
+
+
+  <!-- AKTIONEN -->
+  <div class="card" id="userAnswers">
+    <div id="userAnswerBox" class="confidence-buttons" style="grid-template-columns: 1fr 1fr;">
+      <button id="userAnswerButton1" style="width: 100%;" class="button" onclick="compareAnswer('wrong')">
+        ❌ falsche Antwort
+      </button>
+
+      <button id="userAnswerButton2" style="width: 100%;" class="button" onclick="compareAnswer('right')">
+        ✅ richtige Antwort
+      </button>
+    </div>
+
+  </div>
+
+  <div style="margin-bottom: 80px;"></div>
+
+</div>
+
+<!-- NAV -->
+<script src="../../app-nav.js" defer></script>
+<app-nav></app-nav>
+
+<!-- SCRIPT -->
+<script src="./learning_self-compare.js" defer></script>
+<script src="../../home/frontend/countingTime.js" defer></script>
+
+</body>
+</html>

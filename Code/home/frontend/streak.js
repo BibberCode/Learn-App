@@ -1,4 +1,7 @@
 function updateStreak() {
+    const dailyMinutes = Number(localStorage.getItem("dailyMinutes") || 0);
+    if (dailyMinutes < 10) return; // Mindestzeit für Streak
+
     const today = new Date().toISOString().split("T")[0];
 
     let savedDate = localStorage.getItem("dateStreak");

@@ -9,10 +9,13 @@ nextCard();
 function showCard() {
   if (!currentCard) return;
 
+  
+
   document.getElementById("question").textContent = currentCard.frage;
 
   document.getElementById("evaluation").textContent = "";
-  document.getElementById("nextBtn").style.display = "none";
+  document.getElementById("userAnswers").style.display = "none";
+  document.getElementById("confidenceBox").style.display = "block";
 }
 
 function updateFinishedCardsBar() {
@@ -40,53 +43,50 @@ window.addEventListener("DOMContentLoaded", () => {
 /* ---------------- Antwort prüfen ---------------- */
 
 let right = false;
-function compareAnswer(userAnswer, correctAnswer) {
-  const evalBox = document.getElementById("evaluation");
-  evalBox.style.display = "block";
-
-  userAnswer = (userAnswer || "").toLowerCase().trim().replace(/\s+/g, "");
-  correctAnswer = (correctAnswer || "").toLowerCase().trim().replace(/\s+/g, "");
-
-  if (userAnswer === correctAnswer) {
-    evalBox.textContent = "Richtig! Antwort: " + currentCard.antwort;
-    evalBox.style.color = "green";
+function compareAnswer(answer) {
+  if (answer === "right") {
     right = true;
-  } else {
-    evalBox.textContent = "Falsch! Richtige Antwort: " + currentCard.antwort;
-    evalBox.style.color = "red";
+  } else if (answer === "wrong") {
     right = false;
   }
+
+  checkLevel();
+}
+
+function checkLevel() {
+  const name = localStorage.getItem("currentSetName");
+  const set = learnsets.find(s => (s.name || "").trim() === (name || "").trim());
+
+  if (set) {
+    const card = set.qa.find(q => q.frage === currentCard.frage);
+
+    if (card && right) {
+      card.sicherheit = level;
+      localStorage.setItem("learnsets", JSON.stringify(learnsets));
+    }
+    else if (card && !right) {
+      card.sicherheit = 5; // direkt auf "schlecht" setzen, wenn die Antwort falsch war
+      localStorage.setItem("learnsets", JSON.stringify(learnsets));
+    }
+  }
+
+  updateFinishedCardsBar();
+  nextCard();
 }
 
 /* ---------------- CONFIDENCE ---------------- */
 
+let level = 3; // Standardwert
 document.querySelectorAll("[data-level]").forEach(btn => {
   btn.onclick = () => {
-    const level = Number(btn.dataset.level);
+    level = Number(btn.dataset.level);
 
-    const userAnswer = document.getElementById("userAnswer").value;
+    document.getElementById("confidenceBox").style.display = "none";
+    document.getElementById("userAnswers").style.display = "block";
 
-    compareAnswer(userAnswer, currentCard.antwort);
-
-    const name = localStorage.getItem("currentSetName");
-    const set = learnsets.find(s => (s.name || "").trim() === (name || "").trim());
-
-    if (set) {
-      const card = set.qa.find(q => q.frage === currentCard.frage);
-
-      if (card && right) {
-        card.sicherheit = level;
-        localStorage.setItem("learnsets", JSON.stringify(learnsets));
-      }
-      else if (card && !right) {
-        card.sicherheit = 5; // direkt auf "schlecht" setzen, wenn die Antwort falsch war
-        localStorage.setItem("learnsets", JSON.stringify(learnsets));
-      }
-    }
-
-    updateFinishedCardsBar();
-
-    document.getElementById("nextBtn").style.display = "block";
+    const evalBox = document.getElementById("evaluation");
+    evalBox.style.display = "block";
+    evalBox.textContent = "Antort: " + currentCard.antwort;
   };
 });
 
@@ -102,26 +102,28 @@ function nextCard() {
 
   if (finishedCards.length === set.qa.length) {
     const question = document.getElementById("question");
-    const input = document.getElementById("userAnswer");
+    const userAnswers = document.getElementById("userAnswerBox");
+    const answerBtn1 = document.getElementById("userAnswerButton1");
+    const answerBtn2 = document.getElementById("userAnswerButton2");
     const box = document.getElementById("confidenceBox");
-    const btn = document.getElementById("nextBtnButton");
     const evalBox = document.getElementById("evaluation");
 
     question.textContent = "Alle Karten geschafft 🎉";
-    input.style.display = "none";
     box.style.display = "none";
     evalBox.style.display = "none";
 
-    btn.textContent = "Zurück zur Übersicht";
+    userAnswers.style.gridTemplateColumns = "1fr"; // auf eine Spalte ändern
+    answerBtn1.style.display = "none";
+    answerBtn2.textContent = "Zurück zur Übersicht";
 
-    btn.onclick = () => {
+    answerBtn2.onclick = () => {
       set.qa.forEach(card => {
         card.sicherheit = 3;
       });
 
       localStorage.setItem("learnsets", JSON.stringify(learnsets));
 
-      window.location.href = "./learn.html";
+      window.location.href = "../learn.html";
     };
 
     return;
@@ -129,8 +131,7 @@ function nextCard() {
 
   currentCard = getWeightedCard(set.qa);
 
-  document.getElementById("userAnswer").value = "";
-
+  
   showCard();
 }
 
@@ -162,3 +163,14 @@ function getWeightedCard(cards) {
 
   return picked;
 }
+
+function resetAllCards() {
+  learnsets.forEach(set => {
+    set.qa.forEach(card => {
+      card.sicherheit = 3;
+    });
+  });
+  localStorage.setItem("learnsets", JSON.stringify(learnsets));
+}
+
+window.addEventListener("beforeunload", resetAllCards);
