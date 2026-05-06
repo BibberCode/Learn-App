@@ -16,87 +16,37 @@ function saveLearnsets(data) {
 
 
 /* =========================
-   ADD LEARNSET
-========================= */
-
-function addLearnset() {
-  const titleEl = document.getElementById("title");
-  const descEl = document.getElementById("description");
-
-  const title = titleEl.value.trim();
-  let description = descEl.value.trim();
-
-  if (!title) return;
-
-  if (!description) {
-    description = "Keine Beschreibung vorhanden.";
-  }
-
-  let learnsets = getLearnsets();
-
-  // Duplicate check (case-insensitive)
-  if (
-    learnsets.some(
-      s => (s.name || "").trim().toLowerCase() === title.toLowerCase()
-    )
-  ) {
-    alert("Ein Lernset mit diesem Namen existiert bereits.");
-    return;
-  }
-
-  learnsets.push({
-    name: title,
-    emoji: "📘",
-    description,
-    qa: []
-  });
-
-  saveLearnsets(learnsets);
-
-  localStorage.setItem("currentSetName", title);
-
-  // Input reset
-  titleEl.value = "";
-  descEl.value = "";
-
-  window.location.href = "./learning.html";
-}
-
-
-/* =========================
    RENDER LEARNSETS
 ========================= */
 
 function renderLearnsets() {
   const container = document.getElementById("learnsetList");
-  if (!container) return;
-
   container.innerHTML = "";
 
-  const learnsets = getLearnsets();
+  const learnsets = JSON.parse(localStorage.getItem("learnsets")) || [];
 
+  // ✅ HIER prüfen
   if (learnsets.length === 0) {
-    const empty = document.createElement("div");
-    empty.className = "small-card";
-    empty.textContent = "Keine Lernsets gefunden.";
-    container.appendChild(empty);
+    const card = document.createElement("div");
+
+    card.innerHTML = "<div>Keine Lernsets gefunden.</div>";
+
+    container.appendChild(card);
     return;
   }
 
+  // ✅ erst danach durchgehen
   learnsets.forEach(set => {
     const card = document.createElement("div");
     card.className = "small-card";
 
-    const title = document.createElement("h4");
-    title.textContent = `${set.emoji || "📘"} ${set.name}`;
+    const count = set.qa ? set.qa.length : 0;
 
-    const count = document.createElement("p");
-    count.textContent = `${set.qa ? set.qa.length : 0} Karten`;
-
-    const desc = document.createElement("p");
-    desc.textContent = set.description || "";
-
-    card.append(title, count, desc);
+    card.innerHTML = `
+      <h4>${set.emoji} ${set.name}</h4>
+      <p>${count} Karten</p>
+      <p class="small-text" style="margin-top:8px;">${set.description || ""}</p>
+    `;
 
     card.onclick = () => {
       localStorage.setItem("currentSetName", set.name);

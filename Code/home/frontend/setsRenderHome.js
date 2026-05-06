@@ -22,8 +22,9 @@ function renderLearnsets() {
     const count = set.qa ? set.qa.length : 0;
 
     card.innerHTML = `
-      <h4>${set.name}</h4>
+      <h4>${set.emoji} ${set.name}</h4>
       <p>${count} Karten</p>
+      <p class="small-text" style="margin-top:8px;">${set.description || ""}</p>
     `;
 
     card.onclick = () => {

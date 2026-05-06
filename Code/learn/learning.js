@@ -22,13 +22,15 @@ function updateFinishedCardsBar() {
   if (!set || !set.qa.length) return;
 
   const total = set.qa.length;
-  const low = set.qa.filter(c => (c.sicherheit ?? 3) <= 0).length;
 
-  const percent = (low / total) * 100;
+  // Level 1 = fertig (nach deiner Änderung)
+  const finished = set.qa.filter(c => (c.sicherheit ?? 3) === 1).length;
+
+  const percent = (finished / total) * 100;
 
   document.getElementById("finishedCardsBar").style.width = percent + "%";
   document.getElementById("finishedCardsText").textContent =
-    `${low} / ${total} sind schon geschafft`;
+    `${finished} / ${total} geschafft`;
 }
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -37,19 +39,22 @@ window.addEventListener("DOMContentLoaded", () => {
 
 /* ---------------- Antwort prüfen ---------------- */
 
+let right = false;
 function compareAnswer(userAnswer, correctAnswer) {
   const evalBox = document.getElementById("evaluation");
   evalBox.style.display = "block";
 
-  userAnswer = (userAnswer || "").toLowerCase().trim();
-  correctAnswer = (correctAnswer || "").toLowerCase().trim();
+  userAnswer = (userAnswer || "").toLowerCase().trim().replace(/\s+/g, "");
+  correctAnswer = (correctAnswer || "").toLowerCase().trim().replace(/\s+/g, "");
 
   if (userAnswer === correctAnswer) {
     evalBox.textContent = "Richtig! Antwort: " + currentCard.antwort;
     evalBox.style.color = "green";
+    right = true;
   } else {
     evalBox.textContent = "Falsch! Richtige Antwort: " + currentCard.antwort;
     evalBox.style.color = "red";
+    right = false;
   }
 }
 
@@ -69,11 +74,17 @@ document.querySelectorAll("[data-level]").forEach(btn => {
     if (set) {
       const card = set.qa.find(q => q.frage === currentCard.frage);
 
-      if (card) {
+      if (card && right) {
         card.sicherheit = level;
         localStorage.setItem("learnsets", JSON.stringify(learnsets));
       }
+      else if (card && !right) {
+        card.sicherheit = 5; // direkt auf "schlecht" setzen, wenn die Antwort falsch war
+        localStorage.setItem("learnsets", JSON.stringify(learnsets));
+      }
     }
+
+    updateFinishedCardsBar();
 
     document.getElementById("nextBtn").style.display = "block";
   };
@@ -87,7 +98,7 @@ function nextCard() {
 
   if (!set || !set.qa.length) return;
 
-  const finishedCards = set.qa.filter(card => (card.sicherheit ?? 1) <= 1);
+  const finishedCards = set.qa.filter(card => (card.sicherheit ?? 3) === 1);
 
   if (finishedCards.length === set.qa.length) {
     const question = document.getElementById("question");
@@ -121,7 +132,6 @@ function nextCard() {
   document.getElementById("userAnswer").value = "";
 
   showCard();
-  updateFinishedCardsBar();
 }
 
 /* ---------------- WEIGHTED RANDOM ---------------- */

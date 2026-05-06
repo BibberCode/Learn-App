@@ -113,7 +113,7 @@ function saveAll() {
       set.qa.push({
         frage: f,
         antwort: a,
-        sicherheit: 1, // default Wert
+        sicherheit: 3, // default Wert
       });
     }
   }
