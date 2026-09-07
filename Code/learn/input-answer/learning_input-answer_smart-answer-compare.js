@@ -223,9 +223,10 @@ export async function setConfidenceSmart(level, currentCard, reverse) {
 
   if (!set) return;
 
-  const card = set.qa.find(
-    q => q.frage === currentCard.frage
-  );
+  const card =
+    set.qa.find(
+      q => q.frage === currentCard.frage && q.antwort === currentCard.antwort
+    ) ?? set.qa.find(q => q.frage === currentCard.frage);
 
   if (!card) return;
 

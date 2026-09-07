@@ -7,14 +7,13 @@
   <!-- Theme – vor CSS setzen um FOUC zu vermeiden -->
   <script>(function(){try{var t=localStorage.getItem("sylva-theme");var e=t==="dark"||t==="light"?t:(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",e);document.documentElement.style.colorScheme=e;}catch{}})();</script>
 
-  <title>Feedback</title>
+  <title>Lernset Editor</title>
 
   <!-- LOADING SCREEN -->
   <link rel="stylesheet" href="../../loading-screen/loading-screen.css">
 
-  <!-- HAUPT-CSS -->
+  <!-- CSS FIX -->
   <link rel="stylesheet" href="../../home/frontend/style.css">
-
 </head>
 
 <body>
@@ -22,12 +21,6 @@
 <!-- LOADING SCREEN -->
 <sylva-loading></sylva-loading>
 <script src="../../loading-screen/loading-screen.js" defer></script>
-
-
-<div class="container">
-
-  <!-- dein restlicher Inhalt -->
-
 
 <body>
 
@@ -52,7 +45,7 @@
     <div class="topbar">
       <h2 id="question">Frage</h2>
 
-      <div id="modeBtns" class="reverse-switch">
+      <div id="modeBtns" class="mode-switch">
         <button class="mode active" id="reverseBtn">
           Reverse
         </button>

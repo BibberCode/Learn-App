@@ -168,6 +168,12 @@ class AppNav extends HTMLElement {
         activeIndex = idx;
       }
     });
+    // Sub-Seiten im Lern-Modus (z.B. /Code/learn/self-compare/..., /Code/learn/input-answer/...)
+    // sollen ebenfalls "Lernen" als aktiv markieren
+    if (!activeButton && currentPath.startsWith("/Code/learn/")) {
+      activeButton = buttons[2];
+      activeIndex = 2;
+    }
     // Letzte Prüfung für Home auf GitHub Pages ("/SylvaLearn/" -> "/")
     if (!activeButton) {
       const fallback = buttons[0];

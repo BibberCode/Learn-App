@@ -5,6 +5,7 @@ let currentCard = null;
 let lastCard = null;
 
 let reverse = localStorage.getItem("reverse") === "true";
+let cardReverse = reverse;
 
 /* ---------------- IMPORTS ---------------- */
 
@@ -46,11 +47,15 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   const reverseBtn = document.getElementById("reverseBtn");
 
+  reverseBtn?.classList.toggle("active", reverse);
+
   reverseBtn?.addEventListener("click", () => {
     reverse = !reverse;
     localStorage.setItem("reverse", reverse);
 
     reverseBtn.classList.toggle("active", reverse);
+    // wirksam erst ab nächster Karte: cardReverse bleibt
+    // unverändert, damit Frage/korrekte Antwort der aktuellen Karte korrekt bleiben
   });
 
   await setMode(currentMode);
@@ -135,6 +140,7 @@ function nextCard() {
 
   lastCard = currentCard;
   currentCard = newCard;
+  cardReverse = reverse;
 
   /* ---------- INPUT RESET ---------- */
 
@@ -154,32 +160,54 @@ function nextCard() {
 
 /* ---------------- WEIGHTED ---------------- */
 
+function getCardKey(card) {
+  if (!card) return null;
+  return `${card.frage ?? ""}|||${card.antwort ?? ""}`;
+}
+
 function getWeightedCardSafe(cards, exclude = null) {
+  if (!cards || cards.length === 0) return null;
+
+  // Wie im self-compare mode: fertige Karten (sicherheit === 1) aussortieren
+  const available = cards.filter(c => (c.sicherheit ?? 3) > 1);
+  const source = available.length > 0 ? available : cards;
+
+  if (source.length === 1) return source[0];
 
   const pool = [];
 
-  for (const card of cards) {
-
-    if (card === exclude) continue;
-
+  for (const card of source) {
     const s = card.sicherheit ?? 3;
-
-    let weight = 1;
-
-    if (s === 5) weight = 8;
-    else if (s === 4) weight = 5;
-    else if (s === 3) weight = 3;
-    else if (s === 2) weight = 2;
-    else if (s === 1) weight = 1;
+    const weight = Math.pow(2, s);
 
     for (let i = 0; i < weight; i++) {
       pool.push(card);
     }
   }
 
-  if (pool.length === 0) return cards.find(card => card !== exclude) ?? cards[0] ?? null;
+  if (pool.length === 0) return source[0] ?? null;
 
-  return pool[Math.floor(Math.random() * pool.length)];
+  const excludeKey = getCardKey(exclude);
+
+  // Wenn es nur eine unterschiedliche Karte gibt, ist eine Wiederholung unvermeidbar
+  if (excludeKey !== null) {
+    const hasOther = source.some(c => getCardKey(c) !== excludeKey);
+    if (!hasOther) return source[0];
+  }
+
+  let picked = null;
+  let guard = 0;
+
+  do {
+    picked = pool[Math.floor(Math.random() * pool.length)];
+    guard++;
+  } while (
+    excludeKey !== null &&
+    getCardKey(picked) === excludeKey &&
+    guard < 50
+  );
+
+  return picked;
 }
 
 /* ---------------- UI ---------------- */
@@ -188,7 +216,7 @@ function showCard() {
 
   if (!currentCard) return;
 
-  const frage = reverse
+  const frage = cardReverse
     ? currentCard.antwort
     : currentCard.frage;
 
@@ -202,7 +230,10 @@ function showCard() {
   const nextBtn = document.getElementById("nextBtn");
   const confidenceBox = document.getElementById("confidenceBox");
 
-  if (evaluation) evaluation.textContent = "";
+  if (evaluation) {
+    evaluation.textContent = "";
+    evaluation.style.display = "none";
+  }
   if (nextBtn) nextBtn.style.display = "none";
   if (confidenceBox) confidenceBox.style.display = "block";
 }
@@ -257,11 +288,11 @@ document.querySelectorAll("[data-level]").forEach(btn => {
     if (!currentCard) return;
 
     if (currentMode === "smart") {
-      setConfidenceSmart(level, currentCard, reverse);
+      setConfidenceSmart(level, currentCard, cardReverse);
     }
 
     if (currentMode === "strict") {
-      await setConfidenceStrict(level, currentCard, reverse);
+      await setConfidenceStrict(level, currentCard, cardReverse);
     }
 
     const confidenceBox = document.getElementById("confidenceBox");

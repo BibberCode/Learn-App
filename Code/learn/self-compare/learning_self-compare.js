@@ -8,6 +8,7 @@ let allCards = 0;
 let rightCards = 0;
 
 let reverse = localStorage.getItem("reverse") === "true";
+let cardReverse = reverse;
 let level = 3;
 
 /* ---------------- STORAGE HELPERS ---------------- */
@@ -48,6 +49,8 @@ window.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("reverse", reverse);
 
     reverseBtn.classList.toggle("active", reverse);
+    // wirksam erst ab nächster Karte: cardReverse bleibt
+    // unverändert, damit Frage/Antwort der aktuellen Karte korrekt bleiben
   });
 
   reverseBtn.classList.toggle("active", reverse);
@@ -86,12 +89,12 @@ function compareAnswer(answer) {
     wrongAnswerAlone();
   }
 
-  checkLevel();
+  checkLevel(answer);
 }
 
 /* ---------------- LEVEL CHECK ---------------- */
 
-function checkLevel() {
+function checkLevel(answer) {
   const learnsets = getLearnsets();
   const setName = localStorage.getItem("currentSetName") || "";
 
@@ -103,14 +106,17 @@ function checkLevel() {
 
   const set = learnsets[setIndex];
 
-  const frage = reverse
-    ? currentCard.antwort
-    : currentCard.frage;
-
-  const card = set.qa.find(q => q.frage === frage);
+  const card =
+    set.qa.find(
+      q => q.frage === currentCard.frage && q.antwort === currentCard.antwort
+    ) ?? set.qa.find(q => q.frage === currentCard.frage);
 
   if (card) {
-    card.sicherheit = level ?? 3;
+    if (answer === "wrong") {
+      card.sicherheit = 5;
+    } else {
+      card.sicherheit = level ?? 3;
+    }
 
     localStorage.setItem(
       "learnsets",
@@ -128,7 +134,7 @@ document.querySelectorAll("[data-level]").forEach(btn => {
   btn.onclick = () => {
     level = Number(btn.dataset.level);
 
-    const antwort = reverse
+    const antwort = cardReverse
       ? currentCard.frage
       : currentCard.antwort;
 
@@ -219,6 +225,7 @@ function nextCard() {
   );
 
   currentCard = getWeightedCard(availableCards);
+  cardReverse = reverse;
 
   const evalBox = document.getElementById("evaluation");
   evalBox.style.display = "none";
@@ -228,7 +235,15 @@ function nextCard() {
 
 /* ---------------- WEIGHTED PICK ---------------- */
 
+function getCardKey(card) {
+  if (!card) return null;
+  return `${card.frage ?? ""}|||${card.antwort ?? ""}`;
+}
+
 function getWeightedCard(cards) {
+  if (!cards || cards.length === 0) return null;
+  if (cards.length === 1) return cards[0];
+
   const pool = [];
 
   for (const card of cards) {
@@ -240,11 +255,22 @@ function getWeightedCard(cards) {
     }
   }
 
+  if (pool.length === 0) return cards[0];
+
+  const lastKey = getCardKey(lastCard);
+
+  if (lastKey !== null) {
+    const hasOther = cards.some(c => getCardKey(c) !== lastKey);
+    if (!hasOther) return cards[0];
+  }
+
   let picked;
+  let guard = 0;
 
   do {
     picked = pool[Math.floor(Math.random() * pool.length)];
-  } while (picked === lastCard && pool.length > 1);
+    guard++;
+  } while (getCardKey(picked) === lastKey && guard < 50);
 
   lastCard = picked;
 
@@ -256,13 +282,15 @@ function getWeightedCard(cards) {
 function showCard() {
   if (!currentCard) return;
 
-  const frage = reverse
+  const frage = cardReverse
     ? currentCard.antwort
     : currentCard.frage;
 
   document.getElementById("question").textContent = frage;
 
   document.getElementById("evaluation").textContent = "";
+  const evalBox = document.getElementById("evaluation");
+  if (evalBox) evalBox.style.display = "none";
   document.getElementById("userAnswers").style.display = "none";
   document.getElementById("confidenceBox").style.display = "block";
 }
