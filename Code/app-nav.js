@@ -17,26 +17,28 @@ class AppNav extends HTMLElement {
     this.shadowRoot.innerHTML = `
       <style>
         :host {
-          position: fixed;
-          z-index: 9999;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          display: flex;
-          justify-content: center;
+          display: contents;
           pointer-events: none;
           view-transition-name: app-nav;
         }
 
         .nav {
-          position: relative;
-          /* FIX: 100% statt 100vw – unabhängig von Scrollbar-Breite+Gutter */
-          width: min(420px, calc(100% - 32px));
+          position: fixed;
+          z-index: 9999;
+          left: 0;
+          right: 0;
+          bottom: calc(14px + env(safe-area-inset-bottom, 0));
+          margin: 0 auto;
+          transform: translateZ(0);
+          /* Komplett statisch – kein Mitlaufen in beide Scroll-Richtungen */
+          will-change: transform;
+          backface-visibility: hidden;
+          contain: layout paint style;
+          width: min(420px, calc(100vw - 32px));
           display: grid;
           grid-template-columns: repeat(5, 1fr);
           align-items: center;
           padding: 6px;
-          margin-bottom: 14px;
           box-sizing: border-box;
           border-radius: 999px;
           background: var(--nav-bg, rgba(255, 255, 255, 0.78));
@@ -46,7 +48,6 @@ class AppNav extends HTMLElement {
           box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.05);
           overflow: hidden;
           pointer-events: auto;
-          contain: layout;
           transition: background 0.25s ease, border-color 0.25s ease;
         }
 
@@ -108,9 +109,17 @@ class AppNav extends HTMLElement {
         }
 
         @media (max-width: 420px) {
-          .nav { width: calc(100% - 20px); margin-bottom: 10px; }
+          .nav {
+            width: calc(100vw - 20px - env(safe-area-inset-left, 0) - env(safe-area-inset-right, 0));
+            bottom: calc(10px + env(safe-area-inset-bottom, 0));
+          }
           button { padding: 9px 0; font-size: 11px; }
           button span { font-size: 17px; }
+        }
+
+        /* Extra schmal: noch statischer, verhindert Springen bei 320px */
+        @media (max-width: 360px) {
+          .nav { width: calc(100vw - 16px); }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -190,31 +199,14 @@ class AppNav extends HTMLElement {
         });
       });
 
-      // ResizeObserver nur für Viewport-Änderungen (z.B. Rotation)
-      // Kein hide/show, da calc() bereits stabil
-      if (typeof ResizeObserver !== "undefined") {
-        let roFrame = 0;
-        const ro = new ResizeObserver(() => {
-          cancelAnimationFrame(roFrame);
-          roFrame = requestAnimationFrame(() => {
-            // Kurz Transition aus für instant Neuberechnung bei Größenänderung
-            const wasReady = bubble.classList.contains("ready");
-            if (wasReady) bubble.classList.remove("ready");
-            bubble.style.setProperty("--active-index", String(activeIndex));
-            if (wasReady) requestAnimationFrame(() => bubble.classList.add("ready"));
-          });
-        });
-        ro.observe(nav);
-        this._ro = ro;
-      }
-
-      // Fonts nachladen (Emoji) – nur falls nötig leicht nachjustieren
+      // Fonts nachladen (Emoji) – Browser rechnet calc() neu, kein Jump
       if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(() => {
-          // Index bleibt gleich, Browser rechnet calc() neu – kein Visible-Jump
           bubble.style.setProperty("--active-index", String(activeIndex));
         });
       }
+      // Kein ResizeObserver mehr nötig – Bubble via CSS calc() skaliert automatisch
+      // Verhindert Shift-Flackern beim Scrollen auf Mobile (RO triggerte bei jedem Viewport-Change)
     }
 
     // ==========================================
